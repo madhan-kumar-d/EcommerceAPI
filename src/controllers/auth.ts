@@ -13,14 +13,13 @@ export const signup = async (
   res: Response,
   next: NextFunction,
 ) => {
+  console.log(1111);
   const { name, email, password } = req.body;
   let userExsist = await prismaClient.user.findFirst({ where: { email } });
   if (userExsist) {
-    next(
-      new BadRequestsException(
-        'User already exist',
-        errorCodes.USER_ALREADY_EXISTS,
-      ),
+    throw new BadRequestsException(
+      'User already exist',
+      errorCodes.USER_ALREADY_EXISTS,
     );
   }
   let user = await prismaClient.user.create({
@@ -42,19 +41,16 @@ export const login = async (
   let user = await prismaClient.user.findFirst({ where: { email } });
   console.log(JWTTOKEN);
   if (!user) {
-    next(
-      new BadRequestsException(
-        'Invalid Credentials',
-        errorCodes.INVALID_USER_CREDENTIALS,
-      ),
+    // returning next means it will stop the execution, express will trigger next middleware/controller/function even next function is called
+    throw new BadRequestsException(
+      'Invalid Credentials',
+      errorCodes.INVALID_USER_CREDENTIALS,
     );
   }
   if (!(await compare(password, user!.password))) {
-    next(
-      new BadRequestsException(
-        'Invalid Credentials',
-        errorCodes.INVALID_USER_CREDENTIALS,
-      ),
+    throw new BadRequestsException(
+      'Invalid Credentials',
+      errorCodes.INVALID_USER_CREDENTIALS,
     );
   }
   const accessKey = jwt.sign({ user: user!.id }, JWTTOKEN);
