@@ -5,8 +5,6 @@ import { prismaClient } from '..';
 import { JWTTOKEN } from '../secrets';
 import { BadRequestsException } from '../exceptions/bad-request';
 import { errorCodes } from '../exceptions/root';
-import { error, log } from 'console';
-// const userModel = prismaClient.user;
 
 export const signup = async (
   req: Request,

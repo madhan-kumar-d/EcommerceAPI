@@ -8,8 +8,6 @@ export const errorMiddleware = (
   res: Response,
   next: NextFunction,
 ) => {
-  console.log(error);
-  
   if(error.isJoi){
     res.status(422).json({message: error.name, errorCodes:errorCodes.UNABLE_TO_PROCESS_INPUT_DATA, errors: error.details.map((details:any)=>details.message).join(', ')});
   }else if(error instanceof HTTPException){
