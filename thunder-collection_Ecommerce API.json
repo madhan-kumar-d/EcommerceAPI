@@ -2,7 +2,7 @@
     "clientName": "Thunder Client",
     "collectionName": "Ecommerce API",
     "collectionId": "4def4340-44c7-46c2-8ba2-53dfabc88feb",
-    "dateExported": "2024-06-17T16:40:02.865Z",
+    "dateExported": "2024-06-18T02:36:34.275Z",
     "version": "1.2",
     "folders": [
         {
@@ -23,8 +23,13 @@
             "method": "POST",
             "sortNum": 10000,
             "created": "2024-06-17T16:37:47.241Z",
-            "modified": "2024-06-17T16:38:01.853Z",
-            "headers": []
+            "modified": "2024-06-18T02:30:40.934Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\": \"Madhan\",\n  \"email\": \"info@madhankumar.co.in\",\n  \"password\": \"Test@123\"\n}",
+                "form": []
+            }
         }
     ],
     "settings": {
@@ -32,5 +37,5 @@
             "baseUrl": "http://localhost:3000/"
         }
     },
-    "ref": "4U0yUUNdI52IBNZR9dq-Oa_XWU7eirfnzfeqCa-rY-OKzJsU_HqxRYnNaN_nm2EUWiL26nl_1XHBPWMQBC7erg"
+    "ref": "4U0yUUNdI52IBNZR9dq-OXifotcf3_DQpzMXgXkKKciQho_ExLiRovFDFyI-YDbFsUeOKOnjAho64jAFzLyIoA"
 }

@@ -5,6 +5,7 @@ import { prismaClient } from '..';
 import { JWTTOKEN } from '../secrets';
 import { BadRequestsException } from '../exceptions/bad-request';
 import { errorCodes } from '../exceptions/root';
+import { conflictException } from '../exceptions/conflicts';
 
 export const signup = async (
   req: Request,
@@ -15,9 +16,10 @@ export const signup = async (
   const { name, email, password } = req.body;
   let userExsist = await prismaClient.user.findFirst({ where: { email } });
   if (userExsist) {
-    throw new BadRequestsException(
+    throw new conflictException(
       'User already exist',
       errorCodes.USER_ALREADY_EXISTS,
+      null,
     );
   }
   let user = await prismaClient.user.create({
