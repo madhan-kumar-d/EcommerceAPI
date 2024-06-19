@@ -1,35 +1,59 @@
 import { Response, Request, NextFunction } from 'express';
-import { compare, hash } from 'bcrypt';
+import { compare, hash, genSalt } from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { prismaClient } from '..';
-import { JWTTOKEN } from '../secrets';
+import secrets from '../secrets';
 import { BadRequestsException } from '../exceptions/bad-request';
 import { errorCodes } from '../exceptions/root';
 import { conflictException } from '../exceptions/conflicts';
+import { v5 as uuid } from 'uuid';
+import crypto from 'node:crypto';
 
 export const signup = async (
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
-  console.log(1111);
   const { name, email, password } = req.body;
-  let userExsist = await prismaClient.user.findFirst({ where: { email } });
-  if (userExsist) {
+  let userExist = await prismaClient.user.findFirst({ where: { email } });
+  if (userExist) {
     throw new conflictException(
       'User already exist',
       errorCodes.USER_ALREADY_EXISTS,
       null,
     );
   }
+  const salt = await genSalt(10);
+  console.log(salt);
   let user = await prismaClient.user.create({
     data: {
       name,
       email,
-      password: await hash(password, 10),
+      password: await hash(password, salt),
     },
   });
-  res.json(user);
+  const accessToken = jwt.sign({ userId: user.id }, secrets.JWT_TOKEN, {
+    algorithm: 'HS512',
+    expiresIn: secrets.JWT_EXPIRY,
+  });
+  console.log(accessToken);
+  // based on the string uuid v3/v5 will always generate same string
+  const time = new Date().getTime();
+  const refreshToken = uuid(time + user.email, secrets.UUID_V5_NAMESPACE);
+  const refreshTokenHash = crypto
+    .createHash('sha512')
+    .update(refreshToken)
+    .digest('hex');
+  console.log(refreshTokenHash);
+  await prismaClient.tokens.create({
+    data: {
+      token: refreshTokenHash,
+      userId: user.id,
+      userAgent: '',
+      ipAddress: '',
+    },
+  });
+  res.status(201).json({ accessToken, refreshToken });
 };
 
 export const login = async (
@@ -39,9 +63,7 @@ export const login = async (
 ) => {
   const { email, password } = req.body;
   let user = await prismaClient.user.findFirst({ where: { email } });
-  console.log(JWTTOKEN);
   if (!user) {
-    // returning next means it will stop the execution, express will trigger next middleware/controller/function even next function is called
     throw new BadRequestsException(
       'Invalid Credentials',
       errorCodes.INVALID_USER_CREDENTIALS,
@@ -53,7 +75,7 @@ export const login = async (
       errorCodes.INVALID_USER_CREDENTIALS,
     );
   }
-  const accessKey = jwt.sign({ user: user!.id }, JWTTOKEN);
+  const accessKey = jwt.sign({ user: user!.id }, secrets.JWT_TOKEN);
   res.json(accessKey);
   //   user = await userModel.create();
 };

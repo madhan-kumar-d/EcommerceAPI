@@ -14,10 +14,24 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
+  id        Int      @id @default(autoincrement()) @db.UnsignedInt
   name      String
   email     String
   password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  Tokens    Tokens[]
+}
+
+model Tokens {
+  id           BigInt   @unique @default(autoincrement()) @db.UnsignedBigInt
+  userId       Int      @db.UnsignedInt
+  token        String
+  issuedAt     DateTime @default(now())
+  isValid      Boolean  @default(true)
+  ipAddress    String?  @db.VarChar(20)
+  userAgent    String?  @db.Text
+  userRelation User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isValid(sort: Asc)])
 }

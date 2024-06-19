@@ -1,5 +1,5 @@
 import express, { Express, Request, Response } from 'express';
-import * as secrets from './secrets';
+import secrets from './secrets';
 import mainRouter from './routes';
 import { PrismaClient } from '@prisma/client';
 import { errorMiddleware } from './middleware/errors';
