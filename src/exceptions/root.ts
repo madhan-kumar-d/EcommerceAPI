@@ -1,9 +1,13 @@
 // standard js class extending Error class
 export class HTTPException extends Error {
   statusCode: number;
+
   message: string;
+
   errorCode: errorCodes;
+
   error: any;
+
   constructor(
     message: string,
     errorCode: errorCodes,

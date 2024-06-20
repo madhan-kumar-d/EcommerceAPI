@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+
 export const errorHandler = (method: Function) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {

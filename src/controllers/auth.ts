@@ -1,13 +1,13 @@
 import { Response, Request, NextFunction } from 'express';
 import { compare, hash, genSalt } from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { prismaClient } from '..';
+import { v5 as uuid } from 'uuid';
+import { prismaClient } from '../index.ts';
 import secrets from '../secrets';
 import { BadRequestsException } from '../exceptions/bad-request';
 import { errorCodes } from '../exceptions/root';
 import { conflictException } from '../exceptions/conflicts';
-import { v5 as uuid } from 'uuid';
-import crypto from 'node:crypto';
+import { hashToken } from '../utils';
 
 export const signup = async (
   req: Request,
@@ -15,7 +15,7 @@ export const signup = async (
   next: NextFunction,
 ) => {
   const { name, email, password } = req.body;
-  let userExist = await prismaClient.user.findFirst({ where: { email } });
+  const userExist = await prismaClient.user.findFirst({ where: { email } });
   if (userExist) {
     throw new conflictException(
       'User already exist',
@@ -25,7 +25,7 @@ export const signup = async (
   }
   const salt = await genSalt(10);
   console.log(salt);
-  let user = await prismaClient.user.create({
+  const user = await prismaClient.user.create({
     data: {
       name,
       email,
@@ -40,10 +40,7 @@ export const signup = async (
   // based on the string uuid v3/v5 will always generate same string
   const time = new Date().getTime();
   const refreshToken = uuid(time + user.email, secrets.UUID_V5_NAMESPACE);
-  const refreshTokenHash = crypto
-    .createHash('sha512')
-    .update(refreshToken)
-    .digest('hex');
+  const refreshTokenHash = hashToken(refreshToken);
   console.log(refreshTokenHash);
   await prismaClient.tokens.create({
     data: {
@@ -62,7 +59,7 @@ export const login = async (
   next: NextFunction,
 ) => {
   const { email, password } = req.body;
-  let user = await prismaClient.user.findFirst({ where: { email } });
+  const user = await prismaClient.user.findFirst({ where: { email } });
   if (!user) {
     throw new BadRequestsException(
       'Invalid Credentials',
