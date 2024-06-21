@@ -28,6 +28,7 @@ model Tokens {
   userId       Int      @db.UnsignedInt
   token        String
   issuedAt     DateTime @default(now())
+  expiresAt    DateTime
   isValid      Boolean  @default(true)
   ipAddress    String?  @db.VarChar(20)
   userAgent    String?  @db.Text

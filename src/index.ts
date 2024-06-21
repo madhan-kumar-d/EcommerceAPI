@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from 'express';
+import express, { Express } from 'express';
 import { PrismaClient } from '@prisma/client';
 import secrets from './secrets';
 import mainRouter from './routes';

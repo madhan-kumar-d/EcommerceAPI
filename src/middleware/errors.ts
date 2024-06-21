@@ -1,4 +1,3 @@
-import { STATUS_CODES } from 'http';
 import { Response, Request, NextFunction } from 'express';
 import { errorCodes, HTTPException } from '../exceptions/root';
 
@@ -6,7 +5,8 @@ export const errorMiddleware = (
   error: HTTPException | any,
   req: Request,
   res: Response,
-  next: NextFunction,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _next: NextFunction,
 ) => {
   if (error.isJoi) {
     res.status(422).json({

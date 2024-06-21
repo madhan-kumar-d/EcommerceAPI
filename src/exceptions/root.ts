@@ -1,13 +1,9 @@
 // standard js class extending Error class
 export class HTTPException extends Error {
   statusCode: number;
-
   message: string;
-
   errorCode: errorCodes;
-
   error: any;
-
   constructor(
     message: string,
     errorCode: errorCodes,
@@ -26,5 +22,5 @@ export enum errorCodes {
   USER_NOT_FOUND = 10001,
   USER_ALREADY_EXISTS = 10002,
   INVALID_USER_CREDENTIALS = 10003,
-  UNABLE_TO_PROCESS_INPUT_DATA = 10003,
+  UNABLE_TO_PROCESS_INPUT_DATA = 10004,
 }
