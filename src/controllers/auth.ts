@@ -1,13 +1,12 @@
 import { Response, Request } from 'express';
 import { compare, hash, genSalt } from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { v5 as uuid } from 'uuid';
 import { prismaClient } from '../index';
 import secrets from '../secrets';
 import { BadRequestsException } from '../exceptions/bad-request';
 import { errorCodes } from '../exceptions/root';
 import { conflictException } from '../exceptions/conflicts';
-import { hashToken } from '../utils';
+import { generateAccessToken, generateRefreshToken } from '../utils';
 
 export const signup = async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
@@ -20,7 +19,6 @@ export const signup = async (req: Request, res: Response) => {
     );
   }
   const salt = await genSalt(10);
-  console.log(salt);
   const user = await prismaClient.user.create({
     data: {
       name,
@@ -28,27 +26,10 @@ export const signup = async (req: Request, res: Response) => {
       password: await hash(password, salt),
     },
   });
-  const accessToken = jwt.sign({ userId: user.id }, secrets.JWT_TOKEN, {
-    algorithm: 'HS512',
-    expiresIn: secrets.JWT_EXPIRY,
-  });
+  const accessToken = generateAccessToken(user.id);
   console.log(accessToken);
   // based on the string uuid v3/v5 will always generate same string
-  const time = new Date().getTime();
-  const expiresAt = new Date();
-  expiresAt.setDate(expiresAt.getDate() + parseInt(secrets.JWT_REFRESH_EXPIRY));
-  const refreshToken = uuid(time + user.email, secrets.UUID_V5_NAMESPACE);
-  const refreshTokenHash = hashToken(refreshToken);
-  console.log(refreshTokenHash);
-  await prismaClient.tokens.create({
-    data: {
-      token: refreshTokenHash,
-      userId: user.id,
-      userAgent: '',
-      ipAddress: '',
-      expiresAt,
-    },
-  });
+  const refreshToken = await generateRefreshToken(user.id, req);
   res.status(201).json({ accessToken, refreshToken });
 };
 
@@ -71,20 +52,46 @@ export const login = async (req: Request, res: Response) => {
     algorithm: 'HS512',
     expiresIn: secrets.JWT_EXPIRY,
   });
-  const time = new Date().getTime();
-  const expiresAt = new Date();
-  expiresAt.setDate(expiresAt.getDate() + parseInt(secrets.JWT_REFRESH_EXPIRY));
-  const refreshToken = uuid(time + user.email, secrets.UUID_V5_NAMESPACE);
-  const refreshTokenHash = hashToken(refreshToken);
-  console.log(refreshTokenHash);
-  await prismaClient.tokens.create({
-    data: {
-      token: refreshTokenHash,
-      userId: user.id,
-      userAgent: '',
-      ipAddress: '',
-      expiresAt,
+  const refreshToken = await generateRefreshToken(user.id, req);
+  res.status(201).json({ accessToken, refreshToken });
+};
+
+// Refresh Access token and invalid if its reused/compromised
+export const token = async (req: Request, res: Response) => {
+  const { refreshToken } = req.body;
+  const currentTime = new Date();
+  // compare in coming toek with buffer from db
+  const getDetails = await prismaClient.tokens.findFirst({
+    where: {
+      token: refreshToken,
+      isValid: true,
+      expiresAt: {
+        lt: currentTime.toISOString(),
+      },
     },
   });
-  res.status(201).json({ accessToken, refreshToken });
+  if (!getDetails) {
+    const getCompromised = await prismaClient.tokens.findFirst({
+      where: {
+        token: refreshToken,
+        isValid: false,
+        expiresAt: {
+          lt: currentTime.toISOString(),
+        },
+      },
+    });
+    if (getCompromised) {
+      await prismaClient.tokens.deleteMany({
+        where: {
+          id: getCompromised.userId,
+        },
+      });
+    }
+    throw new BadRequestsException(
+      'Invalid Credentials',
+      errorCodes.INVALID_USER_CREDENTIALS,
+    );
+  }
+  // const accessToken = generateAccessToken(getDetails?.userId);
+  // const newRefreshToken = await generateRefreshToken(getDetails?.userId, req);
 };
