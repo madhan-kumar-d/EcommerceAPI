@@ -2,6 +2,7 @@ import express, { Express, Request, Response, NextFunction } from 'express';
 import { PrismaClient } from '@prisma/client';
 import secrets from './secrets';
 import mainRouter from './routes';
+import { PrismaClient } from '@prisma/client';
 import { errorMiddleware } from './middleware/errors';
 declare module 'express-serve-static-core' {
   interface Request {
@@ -10,7 +11,7 @@ declare module 'express-serve-static-core' {
   }
 }
 const app: Express = express();
-const { PORT } = secrets;
+const PORT = secrets.PORT;
 
 app.use(express.json());
 app.use((req: Request, _res: Response, next: NextFunction) => {
