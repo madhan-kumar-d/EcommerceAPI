@@ -2,7 +2,6 @@ import express, { Express, Request, Response, NextFunction } from 'express';
 import { PrismaClient } from '@prisma/client';
 import secrets from './secrets';
 import mainRouter from './routes';
-import { PrismaClient } from '@prisma/client';
 import { errorMiddleware } from './middleware/errors';
 declare module 'express-serve-static-core' {
   interface Request {

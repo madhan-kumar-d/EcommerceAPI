@@ -8,7 +8,7 @@ import { generateAccessToken, generateRefreshToken, hashToken } from '../utils';
 
 export const signup = async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
-  let userExist = await prismaClient.user.findFirst({ where: { email } });
+  const userExist = await prismaClient.user.findFirst({ where: { email } });
   if (userExist) {
     throw new conflictException(
       'User already exist',
@@ -33,7 +33,7 @@ export const signup = async (req: Request, res: Response) => {
 
 export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
-  let user = await prismaClient.user.findFirst({ where: { email } });
+  const user = await prismaClient.user.findFirst({ where: { email } });
   if (!user) {
     throw new BadRequestsException(
       'Invalid Credentials',
