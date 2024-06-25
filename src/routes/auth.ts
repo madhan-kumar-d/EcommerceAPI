@@ -1,12 +1,13 @@
 import { Router } from 'express';
-import { login, signup } from '../controllers/auth';
+import { login, signup, token } from '../controllers/auth';
 import { errorHandler } from '../errorHandler';
 import { validator } from '../middleware/validator';
-import { registerSchema } from '../validator.Schema';
+import { loginSchema, registerSchema, tokenSchema } from '../validator.Schema';
 
 const authRouter: Router = Router();
 
-authRouter.post('/login', errorHandler(login));
+authRouter.post('/login', validator(loginSchema), errorHandler(login));
 authRouter.post('/signup', validator(registerSchema), errorHandler(signup));
+authRouter.post('/token', validator(tokenSchema), errorHandler(token));
 
 export default authRouter;

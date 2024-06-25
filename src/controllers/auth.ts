@@ -1,12 +1,10 @@
 import { Response, Request } from 'express';
 import { compare, hash, genSalt } from 'bcrypt';
-import jwt from 'jsonwebtoken';
 import { prismaClient } from '../index';
-import secrets from '../secrets';
 import { BadRequestsException } from '../exceptions/bad-request';
 import { errorCodes } from '../exceptions/root';
 import { conflictException } from '../exceptions/conflicts';
-import { generateAccessToken, generateRefreshToken } from '../utils';
+import { generateAccessToken, generateRefreshToken, hashToken } from '../utils';
 
 export const signup = async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
@@ -48,42 +46,43 @@ export const login = async (req: Request, res: Response) => {
       errorCodes.INVALID_USER_CREDENTIALS,
     );
   }
-  const accessToken = jwt.sign({ user: user!.id }, secrets.JWT_TOKEN, {
-    algorithm: 'HS512',
-    expiresIn: secrets.JWT_EXPIRY,
-  });
+  const accessToken = generateAccessToken(user.id);
+
   const refreshToken = await generateRefreshToken(user.id, req);
   res.status(201).json({ accessToken, refreshToken });
 };
 
 // Refresh Access token and invalid if its reused/compromised
 export const token = async (req: Request, res: Response) => {
-  const { refreshToken } = req.body;
+  const { token: refreshToken } = req.body;
+  const hashedToken = hashToken(refreshToken);
   const currentTime = new Date();
-  // compare in coming toek with buffer from db
+  const currentTimeFormat = currentTime.toISOString();
+  // compare in coming token with buffer from db
   const getDetails = await prismaClient.tokens.findFirst({
     where: {
-      token: refreshToken,
+      token: hashedToken,
       isValid: true,
       expiresAt: {
-        lt: currentTime.toISOString(),
+        gt: currentTimeFormat,
       },
     },
   });
   if (!getDetails) {
     const getCompromised = await prismaClient.tokens.findFirst({
       where: {
-        token: refreshToken,
+        token: hashedToken,
         isValid: false,
         expiresAt: {
-          lt: currentTime.toISOString(),
+          gt: currentTimeFormat,
         },
       },
     });
+    console.log(getCompromised);
     if (getCompromised) {
       await prismaClient.tokens.deleteMany({
         where: {
-          id: getCompromised.userId,
+          userId: getCompromised.userId,
         },
       });
     }
@@ -92,6 +91,15 @@ export const token = async (req: Request, res: Response) => {
       errorCodes.INVALID_USER_CREDENTIALS,
     );
   }
-  // const accessToken = generateAccessToken(getDetails?.userId);
-  // const newRefreshToken = await generateRefreshToken(getDetails?.userId, req);
+  await prismaClient.tokens.update({
+    where: {
+      id: getDetails.id,
+    },
+    data: {
+      isValid: false,
+    },
+  });
+  const accessToken = generateAccessToken(getDetails?.userId);
+  const newRefreshToken = await generateRefreshToken(getDetails?.userId, req);
+  res.status(201).json({ accessToken, refreshToken: newRefreshToken });
 };
