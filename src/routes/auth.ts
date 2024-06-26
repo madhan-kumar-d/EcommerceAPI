@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { login, signup, token } from '../controllers/auth';
+import { login, logout, signup, token } from '../controllers/auth';
 import { errorHandler } from '../errorHandler';
 import { validator } from '../middleware/validator';
 import { loginSchema, registerSchema, tokenSchema } from '../validator.Schema';
@@ -10,6 +10,8 @@ const authRouter: Router = Router();
 authRouter.post('/login', validator(loginSchema), errorHandler(login));
 authRouter.post('/signup', validator(registerSchema), errorHandler(signup));
 authRouter.post('/token', validator(tokenSchema), errorHandler(token));
-authRouter.get('/logout', [validateToken], () => {});
+
+// Delete all token if user wants to logout for logging out from a device delete token from client
+authRouter.get('/logout', [errorHandler(validateToken)], errorHandler(logout));
 
 export default authRouter;

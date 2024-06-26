@@ -103,3 +103,12 @@ export const token = async (req: Request, res: Response) => {
   const newRefreshToken = await generateRefreshToken(getDetails?.userId, req);
   res.status(201).json({ accessToken, refreshToken: newRefreshToken });
 };
+
+export const logout = async (req: Request, res: Response) => {
+  await prismaClient.tokens.deleteMany({
+    where: {
+      userId: req.user,
+    },
+  });
+  res.status(200).json({ message: 'deleted successfully' });
+};

@@ -1,5 +1,6 @@
 import { Response, Request, NextFunction } from 'express';
 import { errorCodes, HTTPException } from '../exceptions/root';
+import { JsonWebTokenError } from 'jsonwebtoken';
 
 export const errorMiddleware = (
   error: HTTPException | any,
@@ -8,6 +9,7 @@ export const errorMiddleware = (
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _next: NextFunction,
 ) => {
+  console.log(error instanceof JsonWebTokenError);
   if (error.isJoi) {
     res.status(422).json({
       message: error.name,
@@ -19,6 +21,11 @@ export const errorMiddleware = (
       message: error.message,
       errorCodes: error.errorCode,
       errors: error.error,
+    });
+  } else if (error instanceof JsonWebTokenError) {
+    res.status(401).json({
+      message: error.message,
+      errorCodes: errorCodes.UNAUTHORIZED_ACCESS,
     });
   } else {
     res.status(500).json({

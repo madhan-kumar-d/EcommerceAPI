@@ -21,6 +21,7 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Tokens    Tokens[]
+  uniqueID  String   @default(uuid())@unique
 }
 
 model Tokens {
