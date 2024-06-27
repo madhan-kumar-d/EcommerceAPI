@@ -6,9 +6,9 @@ import * as cron from 'node-cron';
 import { errorMiddleware } from './middleware/errors';
 declare module 'express-serve-static-core' {
   interface Request {
-    clientIp?: any;
-    userAgent?: string;
-    user?: any;
+    clientIp: any;
+    userAgent: string;
+    user: any;
   }
 }
 const app: Express = express();
@@ -17,7 +17,7 @@ const PORT = secrets.PORT;
 app.use(express.json());
 app.use((req: Request, _res: Response, next: NextFunction) => {
   req.clientIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-  req.userAgent = req.headers['user-agent'];
+  req.userAgent = req.headers['user-agent']!;
   next();
 });
 app.use('/', mainRouter);
