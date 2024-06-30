@@ -14,14 +14,17 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement()) @db.UnsignedInt
+  id        Int        @id @default(autoincrement()) @db.UnsignedInt
   name      String
   email     String
   password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
   Tokens    Tokens[]
-  uniqueID  String   @default(uuid())@unique
+  role      ROLE       @default(USER)
+  uniqueID  String     @unique @default(uuid())
+  CartItem  CartItem[]
+  Order     Order[]
 }
 
 model Tokens {
@@ -36,4 +39,70 @@ model Tokens {
   userRelation User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, isValid(sort: Asc)])
+}
+
+model Product {
+  id          BigInt     @unique @default(autoincrement()) @db.UnsignedBigInt
+  name        String
+  description String     @db.LongText
+  price       Decimal
+  MRP       Decimal
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  CartItem    CartItem[]
+}
+
+model CartItem {
+  id         BigInt   @unique @default(autoincrement()) @db.UnsignedBigInt
+  userId     Int      @db.UnsignedInt
+  userMap    User     @relation(fields: [userId], references: [id])
+  productID  BigInt   @db.UnsignedBigInt
+  ProductMap Product  @relation(fields: [productID], references: [id])
+  quantity   Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  Order      Order[]
+
+  @@map("cart_items")
+}
+
+model Order {
+  id            BigInt        @unique @default(autoincrement()) @db.UnsignedBigInt
+  userId        Int           @db.UnsignedInt
+  userMap       User          @relation(fields: [userId], references: [id])
+  cartID        BigInt        @db.UnsignedBigInt
+  CartMap       CartItem      @relation(fields: [cartID], references: [id])
+  netAmount     Decimal
+  totalQuantity Int
+  orderStatus   ORDERSTATUS   @default(PENDIFNG)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  OrderStatus   OrderStatus[]
+}
+
+model OrderStatus {
+  id          BigInt      @unique @default(autoincrement()) @db.UnsignedBigInt
+  orderID     BigInt      @db.UnsignedBigInt
+  orderMap    Order       @relation(fields: [orderID], references: [id])
+  orderStatus ORDERSTATUS
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@map("order_status")
+}
+
+enum ROLE {
+  ADMIN
+  USER
+}
+
+enum ORDERSTATUS {
+  PENDIFNG
+  PAYMENT_PENDING
+  PAYMENT_COMPLETED
+  ACCETPED
+  ORDER_IN_PROGRESS
+  OUT_FOR_DELIVERY
+  DELIVERED
+  CANCELED
 }

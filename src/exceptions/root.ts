@@ -19,6 +19,7 @@ export class HTTPException extends Error {
 }
 
 export enum errorCodes {
+  NO_DATA_FOUND = 10000,
   USER_NOT_FOUND = 10001,
   USER_ALREADY_EXISTS = 10002,
   INVALID_USER_CREDENTIALS = 10003,

@@ -19,3 +19,19 @@ export const validator = (schema: Joi.ObjectSchema) => {
     }
   };
 };
+export const getValidator = (schema: Joi.ObjectSchema) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    const { error } = schema.validate(req.params, { abortEarly: false });
+    if (error) {
+      next(
+        new InvalidInputsException(
+          'Invalid inputs',
+          errorCodes.UNABLE_TO_PROCESS_INPUT_DATA,
+          error.details.map((detail) => detail.message).join(', '),
+        ),
+      );
+    } else {
+      next();
+    }
+  };
+};

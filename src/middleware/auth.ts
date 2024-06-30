@@ -19,7 +19,9 @@ export const validateToken = async (
     );
   }
   const decoded = jwt.verify(token!, secrets.JWT_TOKEN) as JwtPayload;
-  const users = prismaClient.user.findFirst({ where: { id: decoded.userId } });
+  const users = await prismaClient.user.findFirst({
+    where: { id: decoded.userId },
+  });
   if (!users) {
     throw new unauthenticatedException(
       'Unauthorized Access',
@@ -28,5 +30,17 @@ export const validateToken = async (
     );
   }
   req.user = users;
+  next();
+};
+
+export const is_admin = (req: Request, res: Response, next: NextFunction) => {
+  console.log(req.user.role);
+  if (req.user.role !== 'ADMIN') {
+    throw new unauthenticatedException(
+      'Unauthorized Access',
+      errorCodes.UNAUTHORIZED_ACCESS,
+      'Admin access only',
+    );
+  }
   next();
 };

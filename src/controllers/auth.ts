@@ -104,6 +104,10 @@ export const token = async (req: Request, res: Response) => {
   res.status(201).json({ accessToken, refreshToken: newRefreshToken });
 };
 
+export const aboutMe = async (req: Request, res: Response) => {
+  res.status(200).json({ data: req.user, message: '' });
+};
+
 export const logout = async (req: Request, res: Response) => {
   await prismaClient.tokens.deleteMany({
     where: {
