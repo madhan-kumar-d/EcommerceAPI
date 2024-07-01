@@ -24,9 +24,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{basePath}}/auth/signup",
+							"raw": "{{HOST}}/auth/signup",
 							"host": [
-								"{{basePath}}"
+								"{{HOST}}"
 							],
 							"path": [
 								"auth",
@@ -51,13 +51,276 @@
 							}
 						},
 						"url": {
-							"raw": "{{basePath}}/auth/login",
+							"raw": "{{HOST}}/auth/login",
 							"host": [
-								"{{basePath}}"
+								"{{HOST}}"
 							],
 							"path": [
 								"auth",
 								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"token\": \"616c2a4b-81d4-5e70-842a-84ea57d0f421\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/auth/token",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"auth",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxOTQzMTcxMywiZXhwIjoxNzE5NDM1MzEzfQ.YN0oYqEp7QDqbxye0juZ_5PzTXKG-c-zjyPlQ72VbHxqAz_fw0Taef3z915W8csUK63dvru780-hEQfGMR9-rw1",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{HOST}}/auth/logout",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AboutMe",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxOTY0MTg0NywiZXhwIjoxNzE5NjQ1NDQ3fQ.y4nbjc5xCxCrlXAIsvG1Oj55-CYhhtkAh2QiyHnhfuh6K4KfsJR3KOffoeo1pxCt5pcOMa6FOaWobFKYUP1NKg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{HOST}}/auth/aboutme",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"auth",
+								"aboutme"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Product",
+			"item": [
+				{
+					"name": "search / product list",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"p\",\r\n    \"description\": \"pencil\",\r\n    \"perPage\":2,\r\n    \"page\":1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/product/search",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"product",
+								"search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"pen\",\r\n    \"description\": \"Quality Pencil\",\r\n    \"price\": 18.50,\r\n    \"MRP\": 20.00\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/product",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"pen\",\r\n    \"description\": \"Quality pen\",\r\n    \"price\": 18.50,\r\n    \"MRP\": 20.00\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/product/5",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"product",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Single Product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{HOST}}/product/5",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"product",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"pencil - update\",\r\n    \"description\": \"Quality Pencil - update\",\r\n    \"price\": 18.50,\r\n    \"MRP\": 20.00\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/product/4",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"product",
+								"4"
 							]
 						}
 					},
@@ -88,9 +351,13 @@
 	],
 	"variable": [
 		{
-			"key": "basePath",
+			"key": "HOST",
 			"value": "localhost:3000",
 			"type": "string"
+		},
+		{
+			"key": "jwt_token",
+			"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxOTczNzY1MiwiZXhwIjoxNzIwMDk3NjUyfQ._vPyx6n8Vzr9A1DxrgU1gfk8U2baIdkIrrlO6QBSHmjQzmiCJKml1tLPCsm-Gu7qWGPzkDxXWR8hL6M0zzRWPg"
 		}
 	]
 }

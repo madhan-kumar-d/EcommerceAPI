@@ -10,3 +10,10 @@ export const createProductSchema = Joi.object({
 export const queryProductSchema = Joi.object({
   productID: Joi.number().required(),
 });
+
+export const searchSchema = Joi.object({
+  name: Joi.string(),
+  description: Joi.string(),
+  perPage: Joi.number(),
+  page: Joi.number(),
+});

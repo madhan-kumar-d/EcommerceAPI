@@ -5,32 +5,19 @@ import { errorCodes } from '../exceptions/root';
 
 export const getProducts = async (req: Request, res: Response) => {
   const { productID } = req.params;
-  const { perPage = 10, page = 1 } = req.query;
-  const skip = (+page - 1) * +perPage;
-  let query = {};
-  if (productID) {
-    query = {
-      id: +productID,
-    };
-  }
-  const products = await prismaClient.product.findMany({
-    skip,
-    take: +perPage,
+  const product = await prismaClient.product.findFirst({
     where: {
-      ...query,
+      id: +productID,
     },
   });
-  if (products.length === 0) {
+  if (!product) {
     throw new noRecordFound(
       'No data found',
       errorCodes.NO_DATA_FOUND,
-      'Products not found',
+      'Product not found',
     );
   }
-  const productArr = products.map((product) => {
-    return { ...product, id: product.id.toString() };
-  });
-  res.json(productArr);
+  res.json({ ...product, id: product.id.toString() });
 };
 
 export const createProduct = async (req: Request, res: Response) => {
@@ -48,6 +35,18 @@ export const createProduct = async (req: Request, res: Response) => {
 export const updateProduct = async (req: Request, res: Response) => {
   const { name, description, price, MRP } = req.body;
   const { productID } = req.params;
+  const productSearch = await prismaClient.product.findFirst({
+    where: {
+      id: +productID,
+    },
+  });
+  if (!productSearch) {
+    throw new noRecordFound(
+      'No data found',
+      errorCodes.NO_DATA_FOUND,
+      'Product not found',
+    );
+  }
   const product = await prismaClient.product.update({
     data: {
       name,
@@ -63,12 +62,12 @@ export const updateProduct = async (req: Request, res: Response) => {
 };
 export const deleteProduct = async (req: Request, res: Response) => {
   const { productID } = req.params;
-  const product = await prismaClient.product.findFirst({
+  const productSearch = await prismaClient.product.findFirst({
     where: {
       id: +productID,
     },
   });
-  if (!product) {
+  if (!productSearch) {
     throw new noRecordFound(
       'No data found',
       errorCodes.NO_DATA_FOUND,
@@ -86,29 +85,37 @@ export const deleteProduct = async (req: Request, res: Response) => {
   });
   // data: { ...deleteProduct, id: deleteProduct.id.toString() },
 };
+
 export const searchProducts = async (req: Request, res: Response) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { product: productID, search, perPage = 10, page = 1 } = req.body;
+  const { name, description, perPage = 10, page = 1 } = req.body;
   const skip = (+page - 1) * +perPage;
-  let query = {};
+  const query: [name?: string, description?: any] = [];
   // search is pending
-  // if (productID) {
-  //   query.id =  +productID,
-  // }
-  if (search) {
-    query = {
+  if (name) {
+    query.push({
       name: {
-        contains: search,
+        contains: name,
       },
-    };
+    });
+  }
+  if (description) {
+    query.push({
+      description: {
+        contains: description,
+      },
+    });
   }
   const products = await prismaClient.product.findMany({
     skip,
     take: +perPage,
     where: {
-      ...query,
+      OR: query,
     },
   });
-  console.log(products);
-  res.end();
+
+  res.json(
+    products.map((product) => {
+      return { ...product, id: product.id.toString() };
+    }),
+  );
 };

@@ -13,14 +13,13 @@ import { getValidator, validator } from '../middleware/validator';
 import {
   createProductSchema,
   queryProductSchema,
+  searchSchema,
 } from '../validator.Schema/products';
 
 const productRoute = Router();
-
-productRoute.get('/', [errorHandler(validateToken)], errorHandler(getProducts));
 productRoute.get(
   '/:productID',
-  [errorHandler(validateToken)],
+  [errorHandler(validateToken), getValidator(queryProductSchema)],
   errorHandler(getProducts),
 );
 productRoute.post(
@@ -54,16 +53,12 @@ productRoute.delete(
 
 productRoute.post(
   '/search',
-  [errorHandler(validateToken)],
-  errorHandler(searchProducts),
+  [
+    errorHandler(validateToken),
+    errorHandler(is_admin),
+    validator(searchSchema),
+  ],
+  searchProducts,
 );
-// productRoute.post(
-//   '/',
-//   [errorHandler(validateToken), errorHandler(is_admin)],
-//   async (req: Request, res: Response) => {
-//     console.log('in product post');
-//     res.end();
-//   },
-// );
 
 export default productRoute;
