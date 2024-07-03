@@ -58,6 +58,7 @@ export const updateProduct = async (req: Request, res: Response) => {
       id: +productID,
     },
   });
+  // fix `Do not know how to serialize a BigInt` error in prisma
   res.json({ ...product, id: product.id.toString() });
 };
 export const deleteProduct = async (req: Request, res: Response) => {

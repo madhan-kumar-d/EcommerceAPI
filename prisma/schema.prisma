@@ -46,22 +46,22 @@ model Product {
   name        String
   description String     @db.LongText
   price       Decimal
-  MRP       Decimal
+  MRP         Decimal
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   CartItem    CartItem[]
 }
 
 model CartItem {
-  id         BigInt   @unique @default(autoincrement()) @db.UnsignedBigInt
-  userId     Int      @db.UnsignedInt
-  userMap    User     @relation(fields: [userId], references: [id])
-  productID  BigInt   @db.UnsignedBigInt
-  ProductMap Product  @relation(fields: [productID], references: [id])
-  quantity   Int
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  Order      Order[]
+  id        BigInt   @unique @default(autoincrement()) @db.UnsignedBigInt
+  userId    Int      @db.UnsignedInt
+  user      User     @relation(fields: [userId], references: [id])
+  productID BigInt   @db.UnsignedBigInt
+  Product   Product  @relation(fields: [productID], references: [id])
+  quantity  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Order     Order[]
 
   @@map("cart_items")
 }
@@ -69,9 +69,9 @@ model CartItem {
 model Order {
   id            BigInt        @unique @default(autoincrement()) @db.UnsignedBigInt
   userId        Int           @db.UnsignedInt
-  userMap       User          @relation(fields: [userId], references: [id])
+  user          User          @relation(fields: [userId], references: [id])
   cartID        BigInt        @db.UnsignedBigInt
-  CartMap       CartItem      @relation(fields: [cartID], references: [id])
+  Cart          CartItem      @relation(fields: [cartID], references: [id])
   netAmount     Decimal
   totalQuantity Int
   orderStatus   ORDERSTATUS   @default(PENDIFNG)
@@ -83,7 +83,7 @@ model Order {
 model OrderStatus {
   id          BigInt      @unique @default(autoincrement()) @db.UnsignedBigInt
   orderID     BigInt      @db.UnsignedBigInt
-  orderMap    Order       @relation(fields: [orderID], references: [id])
+  order       Order       @relation(fields: [orderID], references: [id])
   orderStatus ORDERSTATUS
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
