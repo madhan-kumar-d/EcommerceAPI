@@ -74,6 +74,8 @@ model Order {
   Cart          CartItem      @relation(fields: [cartID], references: [id])
   netAmount     Decimal
   totalQuantity Int
+  address       String        @db.Text
+  pinCode       String        @db.VarChar(6)
   orderStatus   ORDERSTATUS   @default(PENDIFNG)
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
