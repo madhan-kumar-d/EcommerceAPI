@@ -8,6 +8,7 @@ export const getCart = async (req: Request, res: Response) => {
   const cartArr = await prismaClient.cartItem.findMany({
     where: {
       userId,
+      orderId: null,
     },
     include: {
       Product: {

@@ -1,16 +1,14 @@
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import { prismaClient } from '..';
 
-// Admin
-export const getCheckout = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  const { userId, perPage = 10, page = 1 } = req.body;
+// Admin 8
+export const getCheckout = async (req: Request, res: Response) => {
+  const { perPage = 10, page = 1 } = req.body;
   const skip = (page - 1) * perPage;
   const query: [userId?: any] = [];
-  if (!userId) {
+  const userId = req.user?.id;
+  const userRole = req.user?.Role;
+  if (userId && userRole != 'Admin') {
     query.push({
       userId: +userId,
     });
@@ -18,8 +16,13 @@ export const getCheckout = async (
   const orderID = await prismaClient.order.findMany({
     skip,
     take: +perPage,
-    where?: [query],
+    where: query.length > 0 ? { AND: query } : undefined,
   });
+  res.json(orderID);
+};
 
-  res.end();
+export const createCheckout = async (req: Request, res: Response) => {
+  const { cartID = null } = req.body;
+  console.log(cartID);
+  res.end;
 };

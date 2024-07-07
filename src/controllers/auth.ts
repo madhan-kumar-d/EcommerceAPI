@@ -111,7 +111,7 @@ export const aboutMe = async (req: Request, res: Response) => {
 export const logout = async (req: Request, res: Response) => {
   await prismaClient.tokens.deleteMany({
     where: {
-      userId: req.user,
+      userId: req.user?.id,
     },
   });
   res.status(200).json({ message: 'deleted successfully' });

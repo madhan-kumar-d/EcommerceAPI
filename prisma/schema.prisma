@@ -61,7 +61,8 @@ model CartItem {
   quantity  Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  Order     Order[]
+  orderId   BigInt?  @db.UnsignedBigInt
+  order     Order    @relation(fields: [id], references: [id])
 
   @@map("cart_items")
 }
@@ -70,8 +71,6 @@ model Order {
   id            BigInt        @unique @default(autoincrement()) @db.UnsignedBigInt
   userId        Int           @db.UnsignedInt
   user          User          @relation(fields: [userId], references: [id])
-  cartID        BigInt        @db.UnsignedBigInt
-  Cart          CartItem      @relation(fields: [cartID], references: [id])
   netAmount     Decimal
   totalQuantity Int
   address       String        @db.Text
@@ -80,6 +79,7 @@ model Order {
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
   OrderStatus   OrderStatus[]
+  CartItem      CartItem[]
 }
 
 model OrderStatus {
