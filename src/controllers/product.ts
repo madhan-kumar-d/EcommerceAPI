@@ -109,9 +109,7 @@ export const searchProducts = async (req: Request, res: Response) => {
   const products = await prismaClient.product.findMany({
     skip,
     take: +perPage,
-    where: {
-      OR: query,
-    },
+    where: query.length > 0 ? { OR: query } : undefined,
   });
 
   res.json(

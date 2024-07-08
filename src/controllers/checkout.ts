@@ -22,7 +22,7 @@ export const getCheckout = async (req: Request, res: Response) => {
 };
 
 export const createCheckout = async (req: Request, res: Response) => {
-  const { cartID = null } = req.body;
-  console.log(cartID);
-  res.end;
+  const { cartId = null } = req.body;
+  console.log(cartId);
+  res.end();
 };

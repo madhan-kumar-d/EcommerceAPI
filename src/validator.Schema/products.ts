@@ -12,8 +12,8 @@ export const queryProductSchema = Joi.object({
 });
 
 export const searchSchema = Joi.object({
-  name: Joi.string(),
-  description: Joi.string(),
-  perPage: Joi.number(),
-  page: Joi.number(),
+  name: Joi.string().allow(null, ''),
+  description: Joi.string().allow(null, ''),
+  perPage: Joi.number().min(1),
+  page: Joi.number().min(1),
 });

@@ -62,7 +62,7 @@ model CartItem {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   orderId   BigInt?  @db.UnsignedBigInt
-  order     Order    @relation(fields: [id], references: [id])
+  order     Order?   @relation(fields: [orderId], references: [id])
 
   @@map("cart_items")
 }
