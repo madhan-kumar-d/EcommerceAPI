@@ -126,7 +126,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcxOTY0MTg0NywiZXhwIjoxNzE5NjQ1NDQ3fQ.y4nbjc5xCxCrlXAIsvG1Oj55-CYhhtkAh2QiyHnhfuh6K4KfsJR3KOffoeo1pxCt5pcOMa6FOaWobFKYUP1NKg",
+									"value": "{{jwt_token}}",
 									"type": "string"
 								}
 							]
@@ -154,21 +154,11 @@
 				{
 					"name": "search / product list",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{jwt_token}}",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\":\"p\",\r\n    \"description\": \"pencil\",\r\n    \"perPage\":2,\r\n    \"page\":1\r\n}",
+							"raw": "{\r\n    \"name\":\"\",\r\n    \"description\": \"\",\r\n    \"perPage\":10,\r\n    \"page\":1\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -191,21 +181,11 @@
 				{
 					"name": "Create",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{jwt_token}}",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"pen\",\r\n    \"description\": \"Quality Pencil\",\r\n    \"price\": 18.50,\r\n    \"MRP\": 20.00\r\n}",
+							"raw": "{\r\n    \"name\": \"pencil\",\r\n    \"description\": \"Quality pencil\",\r\n    \"price\": 3,\r\n    \"MRP\": 3\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -227,21 +207,11 @@
 				{
 					"name": "Update",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{jwt_token}}",
-									"type": "string"
-								}
-							]
-						},
 						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"pen\",\r\n    \"description\": \"Quality pen\",\r\n    \"price\": 18.50,\r\n    \"MRP\": 20.00\r\n}",
+							"raw": "{\r\n    \"name\": \"pen\",\r\n    \"description\": \"Quality pen - update\",\r\n    \"price\": 18.50,\r\n    \"MRP\": 20.00\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -249,13 +219,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{HOST}}/product/5",
+							"raw": "{{HOST}}/product/2",
 							"host": [
 								"{{HOST}}"
 							],
 							"path": [
 								"product",
-								"5"
+								"2"
 							]
 						}
 					},
@@ -264,26 +234,16 @@
 				{
 					"name": "Single Product",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{jwt_token}}",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{HOST}}/product/5",
+							"raw": "{{HOST}}/product/1",
 							"host": [
 								"{{HOST}}"
 							],
 							"path": [
 								"product",
-								"5"
+								"1"
 							]
 						}
 					},
@@ -292,16 +252,6 @@
 				{
 					"name": "Delete Product",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{jwt_token}}",
-									"type": "string"
-								}
-							]
-						},
 						"method": "DELETE",
 						"header": [],
 						"body": {
@@ -334,21 +284,11 @@
 				{
 					"name": "Create",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{jwt_token}}",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"productID\": 1,\r\n    \"quantity\": 1\r\n}",
+							"raw": "{\r\n    \"productID\": 2,\r\n    \"quantity\": 1\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -373,16 +313,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{jwt_token}}",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [],
 						"body": {
@@ -409,21 +339,11 @@
 				{
 					"name": "Update",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{jwt_token}}",
-									"type": "string"
-								}
-							]
-						},
 						"method": "PATCH",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"quantity\": 5\r\n}",
+							"raw": "{\r\n    \"quantity\": 2\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -446,17 +366,7 @@
 				{
 					"name": "Delete",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{jwt_token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PUT",
+						"method": "DELETE",
 						"header": [],
 						"body": {
 							"mode": "raw",
@@ -468,13 +378,61 @@
 							}
 						},
 						"url": {
-							"raw": "{{HOST}}/cart/1",
+							"raw": "{{HOST}}/cart/3",
 							"host": [
 								"{{HOST}}"
 							],
 							"path": [
 								"cart",
-								"1"
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Checkout",
+			"item": [
+				{
+					"name": "List",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{HOST}}/checkout",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"checkout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"cartId\": [1,2] \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/checkout",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"checkout"
 							]
 						}
 					},
@@ -483,6 +441,16 @@
 			]
 		}
 	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcyMDM0MjY0NywiZXhwIjoxNzIwNzAyNjQ3fQ.WyZVINalB6Gn7hw6nHBroDTNXEVJkdGQrYzFHIqtPkKZwqvQ0tjxYidOiHrYIXFSTlPhFKSeX1msnwo9YR3fFA",
+				"type": "string"
+			}
+		]
+	},
 	"event": [
 		{
 			"listen": "prerequest",

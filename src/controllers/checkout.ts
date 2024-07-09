@@ -23,6 +23,12 @@ export const getCheckout = async (req: Request, res: Response) => {
 
 export const createCheckout = async (req: Request, res: Response) => {
   const { cartId = null } = req.body;
-  console.log(cartId);
-  res.end();
+  const item = await prismaClient.cartItem.findMany({
+    where: {
+      id: {
+        in: JSON.parse(JSON.stringify(cartId)),
+      },
+    },
+  });
+  res.json(item);
 };

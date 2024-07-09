@@ -28,7 +28,7 @@ model User {
 }
 
 model Tokens {
-  id           BigInt   @unique @default(autoincrement()) @db.UnsignedBigInt
+  id           Int      @unique @default(autoincrement()) @db.UnsignedInt
   userId       Int      @db.UnsignedInt
   token        String
   issuedAt     DateTime @default(now())
@@ -42,7 +42,7 @@ model Tokens {
 }
 
 model Product {
-  id          BigInt     @unique @default(autoincrement()) @db.UnsignedBigInt
+  id          Int        @unique @default(autoincrement()) @db.UnsignedInt
   name        String
   description String     @db.LongText
   price       Decimal
@@ -53,22 +53,22 @@ model Product {
 }
 
 model CartItem {
-  id        BigInt   @unique @default(autoincrement()) @db.UnsignedBigInt
+  id        Int      @unique @default(autoincrement()) @db.UnsignedInt
   userId    Int      @db.UnsignedInt
   user      User     @relation(fields: [userId], references: [id])
-  productID BigInt   @db.UnsignedBigInt
+  productID Int      @db.UnsignedInt
   Product   Product  @relation(fields: [productID], references: [id])
   quantity  Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  orderId   BigInt?  @db.UnsignedBigInt
+  orderId   Int?     @db.UnsignedInt
   order     Order?   @relation(fields: [orderId], references: [id])
 
   @@map("cart_items")
 }
 
 model Order {
-  id            BigInt        @unique @default(autoincrement()) @db.UnsignedBigInt
+  id            Int           @unique @default(autoincrement()) @db.UnsignedInt
   userId        Int           @db.UnsignedInt
   user          User          @relation(fields: [userId], references: [id])
   netAmount     Decimal
@@ -83,8 +83,8 @@ model Order {
 }
 
 model OrderStatus {
-  id          BigInt      @unique @default(autoincrement()) @db.UnsignedBigInt
-  orderID     BigInt      @db.UnsignedBigInt
+  id          Int         @unique @default(autoincrement()) @db.UnsignedInt
+  orderID     Int         @db.UnsignedInt
   order       Order       @relation(fields: [orderID], references: [id])
   orderStatus ORDERSTATUS
   createdAt   DateTime    @default(now())
