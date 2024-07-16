@@ -75,7 +75,7 @@ model Order {
   totalQuantity Int
   address       String        @db.Text
   pinCode       String        @db.VarChar(6)
-  orderStatus   ORDERSTATUS   @default(PENDIFNG)
+  orderStatus   ORDERSTATUS   @default(PENDING)
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
   OrderStatus   OrderStatus[]
@@ -88,7 +88,6 @@ model OrderStatus {
   order       Order       @relation(fields: [orderID], references: [id])
   orderStatus ORDERSTATUS
   createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
 
   @@map("order_status")
 }
@@ -99,7 +98,7 @@ enum ROLE {
 }
 
 enum ORDERSTATUS {
-  PENDIFNG
+  PENDING
   PAYMENT_PENDING
   PAYMENT_COMPLETED
   ACCETPED

@@ -20,7 +20,7 @@ export const validateToken = async (
   }
   const decoded = jwt.verify(token!, secrets.JWT_TOKEN) as JwtPayload;
   const users = await prismaClient.user.findFirst({
-    where: { id: decoded.userId },
+    where: { uniqueID: decoded.userId },
   });
   if (!users) {
     throw new unauthenticatedException(
@@ -33,7 +33,7 @@ export const validateToken = async (
   next();
 };
 
-export const is_admin = (req: Request, res: Response, next: NextFunction) => {
+export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
   console.log(req.user.role);
   if (req.user.role !== 'ADMIN') {
     throw new unauthenticatedException(

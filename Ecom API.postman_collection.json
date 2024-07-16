@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Madhan\",\r\n    \"email\": \"info@madhankumar.co.in\",\r\n    \"password\": \"Test@123\"\r\n}",
+							"raw": "{\r\n    \"name\": \"Madhan\",\r\n    \"email\": \"info1@madhankumar.co.in\",\r\n    \"password\": \"Test@123\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -70,7 +70,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"token\": \"616c2a4b-81d4-5e70-842a-84ea57d0f421\"\r\n}",
+							"raw": "{\r\n    \"token\": \"5ea63c85-1da9-5ba8-a7f9-3a84474701be\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -419,7 +419,33 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"cartId\": [1,2] \r\n}",
+							"raw": "{\r\n    \"cartId\": [4],\r\n    \"address\": \"india\",\r\n    \"pinCode\": \"123123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}/checkout",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"checkout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Status",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"orderId\": 2,\r\n    \"status\": \"PAYMENT_PENDING\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -446,7 +472,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTcyMDM0MjY0NywiZXhwIjoxNzIwNzAyNjQ3fQ.WyZVINalB6Gn7hw6nHBroDTNXEVJkdGQrYzFHIqtPkKZwqvQ0tjxYidOiHrYIXFSTlPhFKSeX1msnwo9YR3fFA",
+				"value": "{{jwt_token}}",
 				"type": "string"
 			}
 		]

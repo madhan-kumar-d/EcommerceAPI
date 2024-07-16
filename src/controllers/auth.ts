@@ -24,10 +24,10 @@ export const signup = async (req: Request, res: Response) => {
       password: await hash(password, salt),
     },
   });
-  const accessToken = generateAccessToken(user.id);
+  const accessToken = generateAccessToken(user.uniqueID);
   console.log(accessToken);
   // based on the string uuid v3/v5 will always generate same string
-  const refreshToken = await generateRefreshToken(user.id, req);
+  const refreshToken = await generateRefreshToken(user.id, user.uniqueID, req);
   res.status(201).json({ accessToken, refreshToken });
 };
 
@@ -46,9 +46,9 @@ export const login = async (req: Request, res: Response) => {
       errorCodes.INVALID_USER_CREDENTIALS,
     );
   }
-  const accessToken = generateAccessToken(user.id);
+  const accessToken = generateAccessToken(user.uniqueID);
 
-  const refreshToken = await generateRefreshToken(user.id, req);
+  const refreshToken = await generateRefreshToken(user.id, user.uniqueID, req);
   res.status(201).json({ accessToken, refreshToken });
 };
 
@@ -65,6 +65,13 @@ export const token = async (req: Request, res: Response) => {
       isValid: true,
       expiresAt: {
         gt: currentTimeFormat,
+      },
+    },
+    include: {
+      userRelation: {
+        select: {
+          uniqueID: true,
+        },
       },
     },
   });
@@ -99,8 +106,12 @@ export const token = async (req: Request, res: Response) => {
       isValid: false,
     },
   });
-  const accessToken = generateAccessToken(getDetails?.userId);
-  const newRefreshToken = await generateRefreshToken(getDetails?.userId, req);
+  const accessToken = generateAccessToken(getDetails.userRelation.uniqueID);
+  const newRefreshToken = await generateRefreshToken(
+    getDetails.userId,
+    getDetails.userRelation.uniqueID,
+    req,
+  );
   res.status(201).json({ accessToken, refreshToken: newRefreshToken });
 };
 

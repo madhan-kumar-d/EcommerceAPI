@@ -1,6 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Request, Response, Router } from 'express';
-import { is_admin, validateToken } from '../middleware/auth';
+import { isAdmin, validateToken } from '../middleware/auth';
 import { errorHandler } from '../errorHandler';
 import {
   createProduct,
@@ -26,7 +26,7 @@ productRoute.post(
   '/',
   [
     errorHandler(validateToken),
-    errorHandler(is_admin),
+    errorHandler(isAdmin),
     validator(createProductSchema),
   ],
   errorHandler(createProduct),
@@ -35,7 +35,7 @@ productRoute.put(
   '/:productID',
   [
     errorHandler(validateToken),
-    errorHandler(is_admin),
+    errorHandler(isAdmin),
     validator(createProductSchema),
     getValidator(queryProductSchema),
   ],
@@ -45,7 +45,7 @@ productRoute.delete(
   '/:productID',
   [
     errorHandler(validateToken),
-    errorHandler(is_admin),
+    errorHandler(isAdmin),
     getValidator(queryProductSchema),
   ],
   errorHandler(deleteProduct),
@@ -53,11 +53,7 @@ productRoute.delete(
 
 productRoute.post(
   '/search',
-  [
-    errorHandler(validateToken),
-    errorHandler(is_admin),
-    validator(searchSchema),
-  ],
+  [errorHandler(validateToken), errorHandler(isAdmin), validator(searchSchema)],
   searchProducts,
 );
 

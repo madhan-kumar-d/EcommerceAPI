@@ -10,14 +10,15 @@ export const hashToken = (token: string) => {
   return crypto.createHash('sha512').update(token).digest('hex');
 };
 
-export const generateRefreshToken = async (userId: number, req: Request) => {
+export const generateRefreshToken = async (
+  userId: number,
+  uniqueID: string,
+  req: Request,
+) => {
   const time = new Date().getTime();
   const expiresAt = new Date();
   expiresAt.setDate(expiresAt.getDate() + parseInt(secrets.JWT_REFRESH_EXPIRY));
-  const refreshToken = uuid(
-    time + userId.toString(),
-    secrets.UUID_V5_NAMESPACE,
-  );
+  const refreshToken = uuid(time + uniqueID, secrets.UUID_V5_NAMESPACE);
   // Can generate one more jwt token and verify it after generating the token
   const refreshTokenHash = hashToken(refreshToken);
   await prismaClient.tokens.create({
@@ -32,7 +33,7 @@ export const generateRefreshToken = async (userId: number, req: Request) => {
   return refreshToken;
 };
 
-export const generateAccessToken = (userId: number) => {
+export const generateAccessToken = (userId: string) => {
   return jwt.sign({ userId }, secrets.JWT_TOKEN, {
     algorithm: 'HS512',
     expiresIn: secrets.JWT_EXPIRY,
