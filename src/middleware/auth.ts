@@ -19,6 +19,7 @@ export const validateToken = async (
     );
   }
   const decoded = jwt.verify(token!, secrets.JWT_TOKEN) as JwtPayload;
+  console.log(decoded);
   const users = await prismaClient.user.findFirst({
     where: { uniqueID: decoded.userId },
   });

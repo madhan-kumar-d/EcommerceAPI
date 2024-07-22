@@ -2,6 +2,7 @@
 import { Request, Response, Router } from 'express';
 import { isAdmin, validateToken } from '../middleware/auth';
 import { errorHandler } from '../errorHandler';
+// import { uploads } from '..';
 import {
   createProduct,
   deleteProduct,
@@ -24,6 +25,7 @@ productRoute.get(
 );
 productRoute.post(
   '/',
+  // uploads('img'),
   [
     errorHandler(validateToken),
     errorHandler(isAdmin),

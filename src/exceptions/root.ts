@@ -1,4 +1,5 @@
 // standard js class extending Error class
+
 export class HTTPException extends Error {
   statusCode: number;
   message: string;
@@ -25,4 +26,5 @@ export enum errorCodes {
   INVALID_USER_CREDENTIALS = 10003,
   UNABLE_TO_PROCESS_INPUT_DATA = 10004,
   UNAUTHORIZED_ACCESS = 10005,
+  PAGE_NOT_FOUND = 404,
 }
