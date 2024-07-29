@@ -28,6 +28,6 @@ checkoutRouter.put(
     errorHandler(isAdmin),
     validator(updateCheckoutStatusSchema),
   ],
-  updateCheckoutStatus,
+  errorHandler(updateCheckoutStatus),
 );
 export default checkoutRouter;

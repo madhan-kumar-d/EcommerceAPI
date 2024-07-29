@@ -21,6 +21,7 @@ model User {
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   Tokens    Tokens[]
+  userImage String?
   role      ROLE       @default(USER)
   uniqueID  String     @unique @default(uuid())
   CartItem  CartItem[]
@@ -42,14 +43,15 @@ model Tokens {
 }
 
 model Product {
-  id          Int        @unique @default(autoincrement()) @db.UnsignedInt
-  name        String
-  description String     @db.LongText
-  price       Decimal
-  MRP         Decimal
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  CartItem    CartItem[]
+  id           Int        @unique @default(autoincrement()) @db.UnsignedInt
+  name         String
+  description  String     @db.LongText
+  price        Decimal    @db.Decimal(15,3)
+  MRP          Decimal    @db.Decimal(15,3)
+  productImage String?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  CartItem     CartItem[]
 }
 
 model CartItem {
@@ -71,7 +73,7 @@ model Order {
   id            Int           @unique @default(autoincrement()) @db.UnsignedInt
   userId        Int           @db.UnsignedInt
   user          User          @relation(fields: [userId], references: [id])
-  netAmount     Decimal
+  netAmount     Decimal       @db.Decimal(15,3)
   totalQuantity Int
   address       String        @db.Text
   pinCode       String        @db.VarChar(6)
@@ -101,7 +103,7 @@ enum ORDERSTATUS {
   PENDING
   PAYMENT_PENDING
   PAYMENT_COMPLETED
-  ACCETPED
+  ACCEPTED
   ORDER_IN_PROGRESS
   OUT_FOR_DELIVERY
   DELIVERED

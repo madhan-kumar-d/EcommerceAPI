@@ -2,7 +2,11 @@ import { Request, Response } from 'express';
 import { prismaClient } from '..';
 import { noRecordFound } from '../exceptions/noRecordsFound';
 import { errorCodes } from '../exceptions/root';
-import { ORDERSTATUS } from '@prisma/client';
+import { ORDERSTATUS, Product } from '@prisma/client';
+import orderEmail from './template/orderEmail';
+import sendMail from '../middleware/mailer';
+import secrets from '../secrets';
+import orderUpdateEmail from './template/orderUpdateEmail';
 
 // Admin 8
 export const getCheckout = async (req: Request, res: Response) => {
@@ -11,6 +15,7 @@ export const getCheckout = async (req: Request, res: Response) => {
   const query: [userId?: any] = [];
   const userId = req.user?.id;
   const userRole = req.user?.role;
+
   console.log(userRole);
   if (userId && userRole != 'ADMIN') {
     query.push({
@@ -36,6 +41,8 @@ export const getCheckout = async (req: Request, res: Response) => {
 
 export const createCheckout = async (req: Request, res: Response) => {
   const { cartId = undefined, address, pinCode } = req.body;
+  console.log(req.fullLink);
+  // return res.end();
   const items = await prismaClient.cartItem.findMany({
     where: {
       id: {
@@ -48,27 +55,59 @@ export const createCheckout = async (req: Request, res: Response) => {
       Product: {
         select: {
           price: true,
+          name: true,
+          productImage: true,
         },
       },
     },
   });
-  if (!items) {
+  if (!items.length) {
     throw new noRecordFound(
       'Cart items not found',
       errorCodes.NO_DATA_FOUND,
       null,
     );
   }
+
+  interface mProducts {
+    img: string;
+    name: string;
+    quantity: number;
+    price: number;
+  }
+  interface mailProductsDetails {
+    products: mProducts[];
+    userName: string;
+    netAmount: number;
+    totalQuantity: number;
+    fullLink: string;
+  }
+  const ProductsDetails: mailProductsDetails = {
+    products: [],
+    userName: '',
+    netAmount: 0,
+    totalQuantity: 0,
+    fullLink: req.fullLink,
+  };
   const orderDetails: { totalQuantity: number; netAmount: number } = {
     totalQuantity: 0,
     netAmount: 0,
   };
   items.forEach((item) => {
+    const tempProduct: mProducts = {
+      img: item.Product.productImage!,
+      name: item.Product.name!,
+      quantity: item.quantity,
+      price: +item.Product.price!,
+    };
     // price is decimal from prisma but in typescript all are number so convert product price to number by adding +
     orderDetails.netAmount = orderDetails.netAmount + +item.Product.price;
     orderDetails.totalQuantity = orderDetails.totalQuantity + item.quantity;
+    ProductsDetails.products = [...ProductsDetails.products, tempProduct];
   });
-  console.log(orderDetails);
+  ProductsDetails.netAmount = orderDetails.netAmount;
+  ProductsDetails.totalQuantity = orderDetails.totalQuantity;
+
   if (!orderDetails.netAmount) {
     throw new noRecordFound(
       'Cart items not found',
@@ -103,6 +142,20 @@ export const createCheckout = async (req: Request, res: Response) => {
       });
     });
   }
+
+  const orderTemplate = orderEmail(ProductsDetails);
+  const subject = secrets.ORDER_EMAIL_SUBJECT.replace(
+    '$orderID',
+    'ORD' + order.id,
+  );
+  const content = {
+    sendTo: req.user.email,
+    subject,
+    html: orderTemplate,
+    fullLink: req.fullLink,
+  };
+  const resp = await sendMail(content);
+
   res.json(order);
 };
 
@@ -112,6 +165,13 @@ export const updateCheckoutStatus = async (req: Request, res: Response) => {
   const order = await prismaClient.order.findFirst({
     where: {
       id: orderId,
+    },
+    include: {
+      user: {
+        select: {
+          name: true,
+        },
+      },
     },
   });
   if (!order) {
@@ -135,5 +195,27 @@ export const updateCheckoutStatus = async (req: Request, res: Response) => {
       orderStatus: status,
     },
   });
+  interface mailDetails {
+    userName: string;
+    status: ORDERSTATUS;
+    fullLink: string;
+  }
+  const Details: mailDetails = {
+    userName: order.user.name,
+    status,
+    fullLink: req.fullLink,
+  };
+  const orderUpdateTemplate = orderUpdateEmail(Details);
+  const subject = secrets.ORDER_UPDATE_EMAIL_SUBJECT.replace(
+    '$orderID',
+    'ORD' + order.id,
+  );
+  const content = {
+    sendTo: req.user.email,
+    subject,
+    html: orderUpdateTemplate,
+    fullLink: req.fullLink,
+  };
+  const resp = await sendMail(content);
   res.json(updateOrder);
 };

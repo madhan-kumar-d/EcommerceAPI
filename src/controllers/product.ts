@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { prismaClient } from '..';
 import { noRecordFound } from '../exceptions/noRecordsFound';
 import { errorCodes } from '../exceptions/root';
+import sendMail from '../middleware/mailer';
 
 export const getProducts = async (req: Request, res: Response) => {
   const { productID } = req.params;
@@ -22,12 +23,14 @@ export const getProducts = async (req: Request, res: Response) => {
 
 export const createProduct = async (req: Request, res: Response) => {
   const { name, description, price, MRP } = req.body;
+  const productImage = req.file?.destination + '/' + req.file?.filename;
   const product = await prismaClient.product.create({
     data: {
       name,
       description,
       price,
       MRP,
+      productImage,
     },
   });
   res.json({ ...product, id: product.id.toString() });
@@ -114,7 +117,11 @@ export const searchProducts = async (req: Request, res: Response) => {
 
   res.json(
     products.map((product) => {
-      return { ...product, id: product.id.toString() };
+      return {
+        ...product,
+        id: product.id.toString(),
+        productImage: req.fullLink + '/' + product.productImage,
+      };
     }),
   );
 };

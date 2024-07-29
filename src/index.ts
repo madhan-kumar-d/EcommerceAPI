@@ -1,28 +1,29 @@
 import express, { Express, Request, Response, NextFunction } from 'express';
 import { PrismaClient } from '@prisma/client';
-import multer from 'multer';
 import secrets from './secrets';
 import mainRouter from './routes';
 import * as cron from 'node-cron';
 import { errorMiddleware } from './middleware/errors';
 import { error404 } from './middleware/error404';
 import { errorHandler } from './errorHandler';
+
 declare module 'express-serve-static-core' {
   interface Request {
     clientIp: any;
     userAgent: string;
     user: any;
+    fullLink: string;
   }
 }
 const app: Express = express();
 const PORT = secrets.PORT;
 
-export const uploads = multer({ dest: 'public/uploads' });
-
 app.use(express.json());
+app.use('/public', express.static('public'));
 app.use((req: Request, _res: Response, next: NextFunction) => {
   req.clientIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
   req.userAgent = req.headers['user-agent']!;
+  req.fullLink = req.protocol + '://' + req.headers.host;
   next();
 });
 app.use('/', mainRouter);

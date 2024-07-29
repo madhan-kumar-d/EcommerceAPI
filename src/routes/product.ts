@@ -2,7 +2,7 @@
 import { Request, Response, Router } from 'express';
 import { isAdmin, validateToken } from '../middleware/auth';
 import { errorHandler } from '../errorHandler';
-// import { uploads } from '..';
+import multer from 'multer';
 import {
   createProduct,
   deleteProduct,
@@ -16,6 +16,25 @@ import {
   queryProductSchema,
   searchSchema,
 } from '../validator.Schema/products';
+import path from 'path';
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/uploads/products');
+  },
+  filename: function (req, file, cb) {
+    const newFileName =
+      Date.now() +
+      '-' +
+      Math.round(Math.random() * 1e9) +
+      '-' +
+      // path.basename(file.originalname)
+      // +'.' + path.extname(file.originalname)
+      file.originalname;
+    cb(null, newFileName);
+  },
+});
+const uploads = multer({ storage: storage });
 
 const productRoute = Router();
 productRoute.get(
@@ -25,7 +44,7 @@ productRoute.get(
 );
 productRoute.post(
   '/',
-  // uploads('img'),
+  uploads.single('profileImage'),
   [
     errorHandler(validateToken),
     errorHandler(isAdmin),
