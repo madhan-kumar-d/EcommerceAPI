@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "b7502eac-6c06-4a2f-9ac4-07a3a639459b",
+		"_postman_id": "a77cfb86-8c49-4cd5-9747-0675ea968904",
 		"name": "Ecom API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "32006483"
+		"_exporter_id": "21587157"
 	},
 	"item": [
 		{
@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Madhan\",\r\n    \"email\": \"info1@madhankumar.co.in\",\r\n    \"password\": \"Test@123\"\r\n}",
+							"raw": "{\r\n    \"name\": \"Madhan\",\r\n    \"email\": \"info@madhankumar.co.in\",\r\n    \"password\": \"Test@123\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -70,7 +70,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"token\": \"5ea63c85-1da9-5ba8-a7f9-3a84474701be\"\r\n}",
+							"raw": "{\r\n    \"token\": \"b1b09998-546f-5f47-a676-27627cb7912e\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -184,13 +184,34 @@
 						"method": "POST",
 						"header": [],
 						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"pencil\",\r\n    \"description\": \"Quality pencil\",\r\n    \"price\": 3,\r\n    \"MRP\": 3\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Note",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Good Note",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "35",
+									"type": "text"
+								},
+								{
+									"key": "MRP",
+									"value": "40",
+									"type": "text"
+								},
+								{
+									"key": "profileImage",
+									"type": "file",
+									"src": "/C:/Users/Madhan.kumar/Downloads/Banner-1-Annual-Subscriptions.jpg"
 								}
-							}
+							]
 						},
 						"url": {
 							"raw": "{{HOST}}/product",
@@ -288,7 +309,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"productID\": 2,\r\n    \"quantity\": 1\r\n}",
+							"raw": "{\r\n    \"productID\": 1,\r\n    \"quantity\": 1\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -396,7 +417,7 @@
 			"name": "Checkout",
 			"item": [
 				{
-					"name": "List",
+					"name": "List / Order List",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -419,7 +440,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"cartId\": [4],\r\n    \"address\": \"india\",\r\n    \"pinCode\": \"123123\"\r\n}",
+							"raw": "{\r\n    \"cartId\": [1],\r\n    \"address\": \"india\",\r\n    \"pinCode\": \"123123\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -445,7 +466,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"orderId\": 2,\r\n    \"status\": \"PAYMENT_PENDING\"\r\n}",
+							"raw": "{\r\n    \"orderId\": 1,\r\n    \"status\": \"ACCEPTED\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
