@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { prismaClient } from '..';
 import { noRecordFound } from '../exceptions/noRecordsFound';
 import { errorCodes } from '../exceptions/root';
-import { ORDERSTATUS, Product } from '@prisma/client';
+import { ORDERSTATUS } from '@prisma/client';
 import orderEmail from './template/orderEmail';
 import sendMail from '../middleware/mailer';
 import secrets from '../secrets';
@@ -95,7 +95,7 @@ export const createCheckout = async (req: Request, res: Response) => {
   };
   items.forEach((item) => {
     const tempProduct: mProducts = {
-      img: item.Product.productImage!,
+      img: req.fullLink + '/' + item.Product.productImage!,
       name: item.Product.name!,
       quantity: item.quantity,
       price: +item.Product.price!,
@@ -154,7 +154,7 @@ export const createCheckout = async (req: Request, res: Response) => {
     html: orderTemplate,
     fullLink: req.fullLink,
   };
-  const resp = await sendMail(content);
+  await sendMail(content);
 
   res.json(order);
 };
@@ -216,6 +216,6 @@ export const updateCheckoutStatus = async (req: Request, res: Response) => {
     html: orderUpdateTemplate,
     fullLink: req.fullLink,
   };
-  const resp = await sendMail(content);
+  await sendMail(content);
   res.json(updateOrder);
 };

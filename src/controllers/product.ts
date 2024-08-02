@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import { prismaClient } from '..';
 import { noRecordFound } from '../exceptions/noRecordsFound';
 import { errorCodes } from '../exceptions/root';
-import sendMail from '../middleware/mailer';
 
 export const getProducts = async (req: Request, res: Response) => {
   const { productID } = req.params;
@@ -18,7 +17,11 @@ export const getProducts = async (req: Request, res: Response) => {
       'Product not found',
     );
   }
-  res.json({ ...product, id: product.id.toString() });
+  res.json({
+    ...product,
+    id: product.id.toString(),
+    productImage: req.fullLink + '/' + product.productImage,
+  });
 };
 
 export const createProduct = async (req: Request, res: Response) => {
@@ -33,7 +36,11 @@ export const createProduct = async (req: Request, res: Response) => {
       productImage,
     },
   });
-  res.json({ ...product, id: product.id.toString() });
+  res.json({
+    ...product,
+    id: product.id.toString(),
+    productImage: req.fullLink + '/' + product.productImage,
+  });
 };
 export const updateProduct = async (req: Request, res: Response) => {
   const { name, description, price, MRP } = req.body;
@@ -62,7 +69,11 @@ export const updateProduct = async (req: Request, res: Response) => {
     },
   });
   // fix `Do not know how to serialize a BigInt` error in prisma
-  res.json({ ...product, id: product.id.toString() });
+  res.json({
+    ...product,
+    id: product.id.toString(),
+    productImage: req.fullLink + '/' + product.productImage,
+  });
 };
 export const deleteProduct = async (req: Request, res: Response) => {
   const { productID } = req.params;

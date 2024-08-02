@@ -12,7 +12,11 @@ const mailer = nodemailer.createTransport({
   },
 });
 
-const sendMail = async (content: any) => {
+const sendMail = async (content: {
+  sendTo: string;
+  subject: string;
+  html: string;
+}) => {
   return mailer.sendMail({
     from: `"${secrets.MAILER_FROM_NAME}"<${secrets.MAILER_FROM}>`,
     to: content.sendTo,

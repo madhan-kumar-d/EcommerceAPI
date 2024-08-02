@@ -14,6 +14,7 @@ export const getCart = async (req: Request, res: Response) => {
       Product: {
         select: {
           name: true,
+          productImage: true,
         },
       },
     },
@@ -23,6 +24,10 @@ export const getCart = async (req: Request, res: Response) => {
       ...cart,
       id: cart.id.toString(),
       productID: cart.productID.toString(),
+      Product: {
+        ...cart.Product,
+        productImage: req.fullLink + '/' + cart.Product.productImage,
+      },
     };
   });
   res.json(carts);
@@ -47,6 +52,7 @@ export const createCart = async (req: Request, res: Response) => {
     where: {
       productID,
       userId: +req.user.id,
+      orderId: null,
     },
     select: {
       quantity: true,
@@ -86,6 +92,7 @@ export const updateCart = async (req: Request, res: Response) => {
   const getCart = await prismaClient.cartItem.findFirst({
     where: {
       id: cartId,
+      orderId: null,
     },
     include: {
       Product: {
@@ -119,10 +126,24 @@ export const updateCart = async (req: Request, res: Response) => {
 
 export const deleteCart = async (req: Request, res: Response) => {
   const cartId = +req.params.id;
+  const getCart = await prismaClient.cartItem.findFirst({
+    where: {
+      id: cartId,
+      orderId: null,
+    },
+  });
+  if (!getCart) {
+    throw new noRecordFound(
+      'No Record Found',
+      errorCodes.NO_DATA_FOUND,
+      'Cart Id Not Found',
+    );
+  }
   await prismaClient.cartItem.delete({
     where: {
       id: cartId,
+      orderId: null,
     },
   });
-  res.json({ message: 'Cart remvoed successfully' });
+  res.json({ message: 'Cart removed successfully' });
 };

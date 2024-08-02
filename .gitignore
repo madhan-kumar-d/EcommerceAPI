@@ -4,3 +4,5 @@ node_modules
 public/uploads/products/*
 public/uploads/users/*
 .git*
+build
+.eslintrc.json*

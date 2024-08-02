@@ -40,7 +40,7 @@ export const login = async (req: Request, res: Response) => {
       errorCodes.INVALID_USER_CREDENTIALS,
     );
   }
-  if (!(await compare(password, user!.password))) {
+  if (!(await compare(password, user.password))) {
     throw new BadRequestsException(
       'Invalid Credentials',
       errorCodes.INVALID_USER_CREDENTIALS,

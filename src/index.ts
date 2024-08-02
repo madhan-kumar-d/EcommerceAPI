@@ -1,11 +1,15 @@
 import express, { Express, Request, Response, NextFunction } from 'express';
 import { PrismaClient } from '@prisma/client';
+import helmet from 'helmet';
+import cors from 'cors';
 import secrets from './secrets';
 import mainRouter from './routes';
 import * as cron from 'node-cron';
 import { errorMiddleware } from './middleware/errors';
 import { error404 } from './middleware/error404';
 import { errorHandler } from './errorHandler';
+import { limiter } from './middleware/rateLimit';
+import compression from 'compression';
 
 declare module 'express-serve-static-core' {
   interface Request {
@@ -17,6 +21,19 @@ declare module 'express-serve-static-core' {
 }
 const app: Express = express();
 const PORT = secrets.PORT;
+const corsOptions = {
+  credentials: true,
+  origin: ['http://127.0.0.1:5500'], // Add domains which all needs to allow
+};
+
+app.use(
+  compression({
+    threshold: 0, // in bytes
+  }),
+);
+app.use(helmet());
+app.use(limiter);
+app.use(cors(corsOptions));
 
 app.use(express.json());
 app.use('/public', express.static('public'));
