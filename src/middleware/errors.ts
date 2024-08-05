@@ -1,6 +1,8 @@
 import { Response, Request, NextFunction } from 'express';
 import { errorCodes, HTTPException } from '../exceptions/root';
 import { JsonWebTokenError } from 'jsonwebtoken';
+import { log } from '../utils/logger';
+import { Prisma } from '@prisma/client';
 
 export const errorMiddleware = (
   error: HTTPException | any,
@@ -9,28 +11,50 @@ export const errorMiddleware = (
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _next: NextFunction,
 ) => {
-  console.log(error instanceof JsonWebTokenError);
   if (error.isJoi) {
+    const errors = error.details
+      .map((details: any) => details.message)
+      .join(', ');
+    log.info(error.name, { message: errors });
     res.status(422).json({
       message: error.name,
       errorCodes: errorCodes.UNABLE_TO_PROCESS_INPUT_DATA,
-      errors: error.details.map((details: any) => details.message).join(', '),
+      errors,
     });
   } else if (error instanceof HTTPException) {
+    log.error(error.message, {
+      message: error.error,
+      errorCodes: error.errorCode,
+    });
     res.status(error.statusCode).json({
       message: error.message,
       errorCodes: error.errorCode,
       errors: error.error,
     });
   } else if (error instanceof JsonWebTokenError) {
+    log.info(error.message, { message: '' });
     res.status(401).json({
       message: error.message,
       errorCodes: errorCodes.UNAUTHORIZED_ACCESS,
     });
+  } else if (
+    error instanceof Prisma.PrismaClientKnownRequestError ||
+    error instanceof Prisma.PrismaClientValidationError ||
+    error instanceof Prisma.PrismaClientInitializationError ||
+    error instanceof Prisma.PrismaClientRustPanicError
+  ) {
+    log.error('DB connection error', {
+      message: error.stack,
+    }); // To save it in different log sheet marking it as Warn
+    res.status(500).json({
+      message: 'DB connection error',
+      errors: 'Please contact admin',
+    });
   } else {
+    log.error(error.message, { message: error.stack });
     res.status(500).json({
       message: error.message || 'Internal Server Error',
-      errors: error.stack,
+      errors: 'Please contact admin',
     });
   }
 };
