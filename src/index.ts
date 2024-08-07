@@ -61,7 +61,6 @@ cron.schedule('* * * * *', async () => {
         },
       },
     });
-    console.log('cron Runs');
   } catch (error: any) {
     console.log(error);
   }

@@ -16,7 +16,6 @@ export const getCheckout = async (req: Request, res: Response) => {
   const userId = req.user?.id;
   const userRole = req.user?.role;
 
-  console.log(userRole);
   if (userId && userRole != 'ADMIN') {
     query.push({
       userId: +userId,
@@ -41,7 +40,6 @@ export const getCheckout = async (req: Request, res: Response) => {
 
 export const createCheckout = async (req: Request, res: Response) => {
   const { cartId = undefined, address, pinCode } = req.body;
-  console.log(req.fullLink);
   // return res.end();
   const items = await prismaClient.cartItem.findMany({
     where: {

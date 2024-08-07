@@ -35,7 +35,6 @@ export const getCart = async (req: Request, res: Response) => {
 
 export const createCart = async (req: Request, res: Response) => {
   const { productID, quantity } = req.body;
-  console.log(productID);
   const validProduct = await prismaClient.product.findFirst({
     where: {
       id: productID,

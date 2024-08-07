@@ -25,7 +25,6 @@ export const signup = async (req: Request, res: Response) => {
     },
   });
   const accessToken = generateAccessToken(user.uniqueID);
-  console.log(accessToken);
   // based on the string uuid v3/v5 will always generate same string
   const refreshToken = await generateRefreshToken(user.id, user.uniqueID, req);
   res.status(201).json({ accessToken, refreshToken });
@@ -85,7 +84,6 @@ export const token = async (req: Request, res: Response) => {
         },
       },
     });
-    console.log(getCompromised);
     if (getCompromised) {
       await prismaClient.tokens.deleteMany({
         where: {
