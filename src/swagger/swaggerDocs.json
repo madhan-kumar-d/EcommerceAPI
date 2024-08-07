@@ -1,0 +1,132 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Swagger Document for ECOM API",
+    "description": "Simple Node js Application with Auth, Product, Cart And Checkout\n\nMore Details Check [Swagger Editor](https://editor.swagger.io/)",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "Signup, Login, RefreshToken, Aboutme l"
+    },
+    {
+      "name": "Products",
+      "description": ""
+    },
+    {
+      "name": "Cart",
+      "description": ""
+    },
+    {
+      "name": "Checkout",
+      "description": ""
+    }
+  ],
+  "paths": {
+    "/auth/signup": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Create New User",
+        "description": "Create new User with user Role",
+        "requestBody": {
+          "description": "POST Data for signup",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Register"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Register"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Pet not found"
+          },
+          "422": {
+            "description": "Validation exception"
+          }
+        },
+        "security": [
+          {
+            "petstore_auth": ["write:pets", "read:pets"]
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Register": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "string",
+            "example": "user"
+          },
+          "email": {
+            "type": "string",
+            "example": "user@domain.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "Test@123"
+          }
+        },
+        "xml": {
+          "name": "Register"
+        }
+      }
+    },
+    "requestBodies": {
+      "Register": {
+        "description": "Pet object that needs to be added to the store",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Register"
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "petstore_auth": {
+        "type": "oauth2",
+        "flows": {
+          "implicit": {
+            "authorizationUrl": "https://petstore3.swagger.io/oauth/authorize",
+            "scopes": {
+              "write:pets": "modify pets in your account",
+              "read:pets": "read your pets"
+            }
+          }
+        }
+      },
+      "api_key": {
+        "type": "apiKey",
+        "name": "api_key",
+        "in": "header"
+      }
+    }
+  }
+}
