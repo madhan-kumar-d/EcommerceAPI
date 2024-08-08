@@ -13,7 +13,7 @@
   "tags": [
     {
       "name": "Auth",
-      "description": "Signup, Login, RefreshToken, Aboutme l"
+      "description": "Signup, Login, RefreshToken, About me"
     },
     {
       "name": "Products",
@@ -35,11 +35,75 @@
         "summary": "Create New User",
         "description": "Create new User with user Role",
         "requestBody": {
-          "description": "POST Data for signup",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Register"
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "users"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "user@domain.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "Test@123"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict User Email",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation exception"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Login",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "user@domain.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "Test@123"
+                  }
+                }
               }
             }
           },
@@ -51,16 +115,111 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Register"
+                  "$ref": "#/components/schemas/AuthResponse"
                 }
               }
             }
           },
           "400": {
-            "description": "Invalid ID supplied"
+            "description": "Invalid User Details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           },
-          "404": {
-            "description": "Pet not found"
+          "422": {
+            "description": "Validation exception"
+          }
+        }
+      }
+    },
+
+    "/auth/token": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Token",
+        "description": "Get Access Token using Refresh Token",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "type": "string",
+                    "example": "UUID"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid User Details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation exception"
+          }
+        }
+      }
+    },
+
+    "/auth/aboutme": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "About Me",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "example": "User Details"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": ""
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid User Details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           },
           "422": {
             "description": "Validation exception"
@@ -68,7 +227,340 @@
         },
         "security": [
           {
-            "petstore_auth": ["write:pets", "read:pets"]
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/auth/logout": {
+      "get": {
+        "tags": ["Auth"],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Logged out successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid Token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation exception"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/product/search": {
+      "post": {
+        "tags": ["Products"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "pen"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": ""
+                  },
+                  "perPage": {
+                    "type": "integer",
+                    "format": "int64",
+                    "example": 10
+                  },
+                  "page": {
+                    "type": "integer",
+                    "format": "int64",
+                    "example": 1
+                  }
+                }
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid Token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/product": {
+      "post": {
+        "tags": ["Products"],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "pen"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "High Quality"
+                  },
+                  "price": {
+                    "type": "integer",
+                    "format": "double",
+                    "example": 90.5
+                  },
+                  "MRP": {
+                    "type": "integer",
+                    "format": "double",
+                    "example": 100
+                  },
+                  "profileImage": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid Token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/product/{id}": {
+      "get": {
+        "tags": ["Products"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid Token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": ["Products"],
+        "parameters": [
+          {
+            "name": "productID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "pen"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "High Quality - Edit"
+                  },
+                  "price": {
+                    "type": "integer",
+                    "format": "double",
+                    "example": 90.5
+                  },
+                  "MRP": {
+                    "type": "integer",
+                    "format": "double",
+                    "example": 100
+                  },
+                  "profileImage": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid Token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": ["Products"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Record deleted successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid Token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
           }
         ]
       }
@@ -79,9 +571,9 @@
       "Register": {
         "type": "object",
         "properties": {
-          "user": {
+          "name": {
             "type": "string",
-            "example": "user"
+            "example": "users"
           },
           "email": {
             "type": "string",
@@ -91,41 +583,92 @@
             "type": "string",
             "example": "Test@123"
           }
-        },
-        "xml": {
-          "name": "Register"
         }
-      }
-    },
-    "requestBodies": {
-      "Register": {
-        "description": "Pet object that needs to be added to the store",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/Register"
-            }
+      },
+      "AuthResponse": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "description": "JWT Token"
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "UUID"
+          }
+        }
+      },
+      "Product": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "example": "pen"
+          },
+          "description": {
+            "type": "string",
+            "example": "High Quality"
+          },
+          "price": {
+            "type": "integer",
+            "format": "double",
+            "example": 90.5
+          },
+          "MRP": {
+            "type": "integer",
+            "format": "double",
+            "example": 100
+          },
+          "productImage": {
+            "type": "string",
+            "example": "domain.tld/public/path/file.ext"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime",
+            "example": "2000-01-01T01:01:01.002Z"
+          },
+          "updatedAt": {
+            "type": "date",
+            "format": "datetime",
+            "example": "2000-01-02T01:01:01.002Z"
+          }
+        }
+      },
+      "ProductResponse": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Product"
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Custom Message"
+          },
+          "errorCodes": {
+            "type": "string",
+            "description": "Custom Error Code for Vernacular Language Compatibility "
+          },
+          "errors": {
+            "type": "string",
+            "description": "Actual Error Message"
           }
         }
       }
     },
     "securitySchemes": {
-      "petstore_auth": {
-        "type": "oauth2",
-        "flows": {
-          "implicit": {
-            "authorizationUrl": "https://petstore3.swagger.io/oauth/authorize",
-            "scopes": {
-              "write:pets": "modify pets in your account",
-              "read:pets": "read your pets"
-            }
-          }
-        }
-      },
-      "api_key": {
-        "type": "apiKey",
-        "name": "api_key",
-        "in": "header"
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     }
   }
