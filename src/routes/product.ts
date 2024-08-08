@@ -73,7 +73,7 @@ productRoute.delete(
 
 productRoute.post(
   '/search',
-  [errorHandler(validateToken), errorHandler(isAdmin), validator(searchSchema)],
+  [errorHandler(validateToken), validator(searchSchema)],
   searchProducts,
 );
 
