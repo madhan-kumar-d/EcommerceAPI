@@ -53,6 +53,7 @@ productRoute.post(
 );
 productRoute.put(
   '/:productID',
+  uploads.single('profileImage'),
   [
     errorHandler(validateToken),
     errorHandler(isAdmin),

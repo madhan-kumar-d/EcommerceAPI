@@ -447,7 +447,7 @@
         "tags": ["Products"],
         "parameters": [
           {
-            "name": "productID",
+            "name": "id",
             "in": "path",
             "required": true,
             "schema": {

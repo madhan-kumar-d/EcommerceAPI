@@ -1,3 +1,4 @@
+import fs from 'node:fs';
 import { Request, Response } from 'express';
 import { prismaClient } from '..';
 import { noRecordFound } from '../exceptions/noRecordsFound';
@@ -44,18 +45,38 @@ export const createProduct = async (req: Request, res: Response) => {
 };
 export const updateProduct = async (req: Request, res: Response) => {
   const { name, description, price, MRP } = req.body;
+  const productImage = req.file?.destination + '/' + req.file?.filename;
   const { productID } = req.params;
   const productSearch = await prismaClient.product.findFirst({
     where: {
       id: +productID,
     },
+    select: {
+      productImage: true,
+      id: true,
+    },
   });
+
   if (!productSearch) {
     throw new noRecordFound(
       'No data found',
       errorCodes.NO_DATA_FOUND,
       'Product not found',
     );
+  }
+
+  if (req.file) {
+    // Delete Old image
+    if (fs.existsSync(productSearch.productImage!))
+      fs.unlinkSync(productSearch.productImage!);
+    await prismaClient.product.update({
+      data: {
+        productImage,
+      },
+      where: {
+        id: +productID,
+      },
+    });
   }
   const product = await prismaClient.product.update({
     data: {
