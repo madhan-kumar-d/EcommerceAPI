@@ -89,6 +89,23 @@ export const deleteProduct = async (req: Request, res: Response) => {
       'Product not found',
     );
   }
+  const alreadyUsed = await prismaClient.product.findFirst({
+    where: {
+      id: +productID,
+      CartItem: {
+        none: {
+          productID: +productID,
+        },
+      },
+    },
+  });
+  if (!alreadyUsed) {
+    throw new noRecordFound(
+      'No data found',
+      errorCodes.NO_DATA_FOUND,
+      'Product in use',
+    );
+  }
   // const deleteProduct =
   await prismaClient.product.delete({
     where: {

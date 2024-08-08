@@ -123,5 +123,5 @@ export const logout = async (req: Request, res: Response) => {
       userId: req.user?.id,
     },
   });
-  res.status(200).json({ message: 'deleted successfully' });
+  res.status(200).json({ message: 'Logged out successfully' });
 };

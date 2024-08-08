@@ -634,7 +634,7 @@
             "example": "2000-01-01T01:01:01.002Z"
           },
           "updatedAt": {
-            "type": "date",
+            "type": "string",
             "format": "datetime",
             "example": "2000-01-02T01:01:01.002Z"
           }
