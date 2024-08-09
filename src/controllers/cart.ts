@@ -3,8 +3,7 @@ import { prismaClient } from '..';
 import { noRecordFound } from '../exceptions/noRecordsFound';
 import { errorCodes } from '../exceptions/root';
 
-export const getCart = async (req: Request, res: Response) => {
-  const userId = req.user.id;
+const getCartContent = async (req: Request, userId: number) => {
   const cartArr = await prismaClient.cartItem.findMany({
     where: {
       userId,
@@ -19,7 +18,7 @@ export const getCart = async (req: Request, res: Response) => {
       },
     },
   });
-  const carts = cartArr.map((cart) => {
+  return cartArr.map((cart) => {
     return {
       ...cart,
       id: cart.id.toString(),
@@ -30,6 +29,10 @@ export const getCart = async (req: Request, res: Response) => {
       },
     };
   });
+};
+export const getCart = async (req: Request, res: Response) => {
+  const userId = req.user.id;
+  const carts = await getCartContent(req, userId);
   res.json(carts);
 };
 
@@ -58,18 +61,24 @@ export const createCart = async (req: Request, res: Response) => {
       id: true,
     },
   });
-  let cart;
   if (!getOldCart) {
-    cart = await prismaClient.cartItem.create({
+    await prismaClient.cartItem.create({
       data: {
         productID,
         quantity,
         userId: +req.user.id,
       },
+      include: {
+        Product: {
+          select: {
+            name: true,
+          },
+        },
+      },
     });
   } else {
     const newQty = getOldCart.quantity + quantity;
-    cart = await prismaClient.cartItem.update({
+    await prismaClient.cartItem.update({
       data: {
         quantity: newQty,
       },
@@ -78,11 +87,8 @@ export const createCart = async (req: Request, res: Response) => {
       },
     });
   }
-  res.json({
-    ...cart,
-    id: cart.id.toString(),
-    productID: cart.productID.toString(),
-  });
+  const carts = await getCartContent(req, +req.user.id);
+  res.json(carts);
 };
 
 export const updateCart = async (req: Request, res: Response) => {

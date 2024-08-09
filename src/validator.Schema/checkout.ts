@@ -7,6 +7,9 @@ export const createCheckoutSchema = Joi.object({
 });
 
 export const updateCheckoutStatusSchema = Joi.object({
-  orderId: Joi.number().required(),
   status: Joi.string().required(),
+});
+
+export const updateCheckoutStatusQuerySchema = Joi.object({
+  id: Joi.number().required(),
 });

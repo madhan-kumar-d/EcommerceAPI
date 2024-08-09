@@ -307,7 +307,7 @@
           "required": false
         },
         "responses": {
-          "201": {
+          "200": {
             "description": "Successful operation",
             "content": {
               "application/json": {
@@ -416,7 +416,7 @@
           }
         ],
         "responses": {
-          "201": {
+          "200": {
             "description": "Successful operation",
             "content": {
               "application/json": {
@@ -491,7 +491,7 @@
           "required": false
         },
         "responses": {
-          "201": {
+          "200": {
             "description": "Successful operation",
             "content": {
               "application/json": {
@@ -532,7 +532,7 @@
           }
         ],
         "responses": {
-          "201": {
+          "200": {
             "description": "Successful operation",
             "content": {
               "application/json": {
@@ -543,6 +543,374 @@
                       "example": "Record deleted successfully"
                     }
                   }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid Token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/cart": {
+      "get": {
+        "tags": ["Cart"],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CartResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid Token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation exception"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": ["Cart"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "productID": {
+                    "type": "integer",
+                    "format": "int64",
+                    "example": 1
+                  },
+                  "quantity": {
+                    "type": "integer",
+                    "format": "int64",
+                    "example": 1
+                  }
+                }
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CartResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid Token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/cart/{id}": {
+      "put": {
+        "tags": ["Cart"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "pen"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "High Quality - Edit"
+                  },
+                  "price": {
+                    "type": "integer",
+                    "format": "double",
+                    "example": 90.5
+                  },
+                  "MRP": {
+                    "type": "integer",
+                    "format": "double",
+                    "example": 100
+                  },
+                  "profileImage": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CartResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid Token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": ["Cart"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Cart removed successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid Token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/checkout": {
+      "get": {
+        "tags": ["Checkout"],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckoutResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid Token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation exception"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": ["Checkout"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "cartId": {
+                    "type": "array",
+                    "example": [1, 2]
+                  },
+                  "address": {
+                    "type": "string",
+                    "example": "india, india - 100001"
+                  },
+                  "pinCode": {
+                    "type": "string",
+                    "example": "100001"
+                  }
+                }
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CartResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid Token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/checkout/{id}": {
+      "patch": {
+        "tags": ["Checkout"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "example": "ACCEPTED",
+                    "enum": [
+                      "PENDING",
+                      "PAYMENT_PENDING",
+                      "PAYMENT_COMPLETED",
+                      "ACCEPTED",
+                      "ORDER_IN_PROGRESS",
+                      "OUT_FOR_DELIVERY",
+                      "DELIVERED",
+                      "CANCELED"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckoutObject"
                 }
               }
             }
@@ -640,10 +1008,149 @@
           }
         }
       },
+      "CartObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 1
+          },
+          "userId": {
+            "type": "integer",
+            "format": "int64",
+            "example": 1
+          },
+          "productID": {
+            "type": "integer",
+            "format": "int64",
+            "example": 1
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int64",
+            "example": 1
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime",
+            "example": "2000-01-01T01:01:01.002Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "datetime",
+            "example": "2000-01-02T01:01:01.002Z"
+          },
+          "orderId": {
+            "type": "integer",
+            "format": "int64",
+            "example": "null"
+          },
+          "Product": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "example": "pen"
+              },
+              "productImage": {
+                "type": "string",
+                "example": "public/uploads/products/1723143731289-420463054-img.png"
+              }
+            }
+          }
+        }
+      },
+      "CartResponse": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/CartObject"
+        }
+      },
       "ProductResponse": {
         "type": "array",
         "items": {
           "$ref": "#/components/schemas/Product"
+        }
+      },
+      "CheckoutObject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 1
+          },
+          "userId": {
+            "type": "integer",
+            "format": "int64",
+            "example": 1
+          },
+          "netAmount": {
+            "type": "integer",
+            "format": "double",
+            "example": 90.5
+          },
+          "totalQuantity": {
+            "type": "integer",
+            "format": "int64",
+            "example": 2
+          },
+          "address": {
+            "type": "string",
+            "example": "india, india - 100001"
+          },
+          "pinCode": {
+            "type": "string",
+            "example": "100001"
+          },
+          "orderStatus": {
+            "type": "string",
+            "example": "PENDING",
+            "enum": [
+              "PENDING",
+              "PAYMENT_PENDING",
+              "PAYMENT_COMPLETED",
+              "ACCEPTED",
+              "ORDER_IN_PROGRESS",
+              "OUT_FOR_DELIVERY",
+              "DELIVERED",
+              "CANCELED"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime",
+            "example": "2000-01-01T01:01:01.002Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "datetime",
+            "example": "2000-01-02T01:01:01.002Z"
+          },
+          "user": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "example": "user"
+              },
+              "email": {
+                "type": "string",
+                "example": "user@gmail.com"
+              },
+              "uniqueID": {
+                "type": "string",
+                "example": "UUID"
+              }
+            }
+          }
+        }
+      },
+      "CheckoutResponse": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/CheckoutObject"
         }
       },
       "ErrorResponse": {
@@ -651,15 +1158,16 @@
         "properties": {
           "message": {
             "type": "string",
-            "description": "Custom Message"
+            "example": "Custom Message"
           },
           "errorCodes": {
-            "type": "string",
-            "description": "Custom Error Code for Vernacular Language Compatibility "
+            "type": "integer",
+            "format": "int64",
+            "example": "100xx"
           },
           "errors": {
             "type": "string",
-            "description": "Actual Error Message"
+            "example": "Actual Error Message"
           }
         }
       }

@@ -24,12 +24,16 @@ cartRouter.post(
 );
 cartRouter.patch(
   '/:id',
-  [getValidator(cartQuerySchema), validator(cartUpdateSchema)],
+  [
+    errorHandler(validateToken),
+    getValidator(cartQuerySchema),
+    validator(cartUpdateSchema),
+  ],
   errorHandler(updateCart),
 );
 cartRouter.delete(
   '/:id',
-  [getValidator(cartQuerySchema)],
+  [errorHandler(validateToken), getValidator(cartQuerySchema)],
   errorHandler(deleteCart),
 );
 

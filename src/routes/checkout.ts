@@ -6,10 +6,11 @@ import {
 } from '../controllers/checkout';
 import { errorHandler } from '../errorHandler';
 import { isAdmin, validateToken } from '../middleware/auth';
-import { validator } from '../middleware/validator';
+import { getValidator, validator } from '../middleware/validator';
 import {
   createCheckoutSchema,
   updateCheckoutStatusSchema,
+  updateCheckoutStatusQuerySchema,
 } from '../validator.Schema/checkout';
 
 const checkoutRouter = Router();
@@ -21,12 +22,13 @@ checkoutRouter.post(
   errorHandler(createCheckout),
 );
 // update status
-checkoutRouter.put(
-  '/',
+checkoutRouter.patch(
+  '/:id',
   [
     errorHandler(validateToken),
     errorHandler(isAdmin),
     validator(updateCheckoutStatusSchema),
+    getValidator(updateCheckoutStatusQuerySchema),
   ],
   errorHandler(updateCheckoutStatus),
 );

@@ -158,8 +158,8 @@ export const createCheckout = async (req: Request, res: Response) => {
 };
 
 export const updateCheckoutStatus = async (req: Request, res: Response) => {
-  const { orderId, status }: { orderId: number; status: ORDERSTATUS } =
-    req.body;
+  const orderId = +req.params.id;
+  const { status }: { status: ORDERSTATUS } = req.body;
   const order = await prismaClient.order.findFirst({
     where: {
       id: orderId,
