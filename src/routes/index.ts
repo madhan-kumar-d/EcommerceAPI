@@ -12,5 +12,5 @@ mainRouter.use('/auth', authRouter);
 mainRouter.use('/product', productRoute);
 mainRouter.use('/cart', cartRouter);
 mainRouter.use('/checkout', checkoutRouter);
-mainRouter.use('/api-docs', serve, setup(swaggerDoc));
+mainRouter.use('/', serve, setup(swaggerDoc));
 export default mainRouter;
