@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: awshost
+    runs-on: awshost-label-1
 
     steps:
       - name: Checkout code
