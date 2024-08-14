@@ -87,6 +87,9 @@ jobs:
       - name: Generate Prisma client
         run: npx prisma generate
 
+      - name: Generate Prisma client
+        run: npx prisma migrate deploy
+
       - name: Stop and remove old container
         run: |
           docker stop ${{ secrets.DOCKER_REPO }} || true

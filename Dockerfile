@@ -11,8 +11,6 @@ COPY . .
 
 RUN npx prisma generate
 
-RUN npx prisma migrate deploy
-
 RUN npm run build
 
 # Stage 2: Create the production image
