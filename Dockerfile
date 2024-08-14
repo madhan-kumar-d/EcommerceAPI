@@ -23,6 +23,7 @@ WORKDIR /app
 COPY --from=build /app/build ./build
 
 COPY --from=build /app/package*.json ./
+COPY /prisma ./
 
 RUN npm ci --only=production
 
