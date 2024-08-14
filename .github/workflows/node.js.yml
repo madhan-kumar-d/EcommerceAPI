@@ -21,14 +21,11 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Generate Prisma client
-        run: npx prisma generate
-
       - name: Build the project
         run: npm run build
 
       - name: Log in to Docker Hub
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_EMAIL }}" --password-stdin
 
       - name: Build Docker image
         run: docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }} .
@@ -42,7 +39,7 @@ jobs:
 
     steps:
       - name: Log in to Docker Hub
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_EMAIL }}" --password-stdin
 
       - name: Pull Docker image from Docker Hub
         run: docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
@@ -67,15 +64,18 @@ jobs:
           echo "MAILER_FROM=${{ secrets.MAILER_FROM }}" >> .env
           echo "MAILER_FROM_NAME=${{ secrets.MAILER_FROM_NAME }}" >> .env
 
+      - name: Generate Prisma client
+        run: npx prisma generate
+
       - name: Stop and remove old container
         run: |
-          docker stop my-node-app || true
-          docker rm my-node-app || true
+          docker stop ${{ secrets.DOCKER_REPO }} || true
+          docker rm ${{ secrets.DOCKER_REPO }} || true
 
       - name: Run Docker container
         run: |
           docker run -d \
-            --name my-node-app \
+            --name ${{ secrets.DOCKER_REPO }} \
             --env-file .env \
             -p ${{ secrets.PORT }}:${{ secrets.PORT }} \
-            my-dockerhub-username/my-node-app:latest
+            ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:latest
