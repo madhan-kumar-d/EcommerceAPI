@@ -21,25 +21,25 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Create .env file from GitHub Secrets
-        run: |
-          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
-          echo "PORT=${{ secrets.PORT }}" >> .env
-          echo "JWT_TOKEN=${{ secrets.JWT_TOKEN }}" >> .env
-          echo "JWT_EXPIRY=${{ secrets.JWT_EXPIRY }}" >> .env
-          echo "JWT_REFRESH_EXPIRY=${{ secrets.JWT_REFRESH_EXPIRY }}" >> .env
-          echo "UUID_V5_NAMESPACE=${{ secrets.UUID_V5_NAMESPACE }}" >> .env
-          echo "COMPANY_NAME=${{ secrets.COMPANY_NAME }}" >> .env
-          echo "COMPANY_ADDRESS=${{ secrets.COMPANY_ADDRESS }}" >> .env
-          echo "COMPANY_SLOGAN=${{ secrets.COMPANY_SLOGAN }}" >> .env
-          echo "ORDER_EMAIL_SUBJECT=${{ secrets.ORDER_EMAIL_SUBJECT }}" >> .env
-          echo "MAILER_HOST=${{ secrets.MAILER_HOST }}" >> .env
-          echo "MAILER_PORT=${{ secrets.MAILER_PORT }}" >> .env
-          echo "MAILER_SECURE=${{ secrets.MAILER_SECURE }}" >> .env
-          echo "MAILER_USER=${{ secrets.MAILER_USER }}" >> .env
-          echo "MAILER_PASSWORD=${{ secrets.MAILER_PASSWORD }}" >> .env
-          echo "MAILER_FROM=${{ secrets.MAILER_FROM }}" >> .env
-          echo "MAILER_FROM_NAME=${{ secrets.MAILER_FROM_NAME }}" >> .env
+      # - name: Create .env file from GitHub Secrets
+      #   run: |
+      #     echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
+      #     echo "PORT=${{ secrets.PORT }}" >> .env
+      #     echo "JWT_TOKEN=${{ secrets.JWT_TOKEN }}" >> .env
+      #     echo "JWT_EXPIRY=${{ secrets.JWT_EXPIRY }}" >> .env
+      #     echo "JWT_REFRESH_EXPIRY=${{ secrets.JWT_REFRESH_EXPIRY }}" >> .env
+      #     echo "UUID_V5_NAMESPACE=${{ secrets.UUID_V5_NAMESPACE }}" >> .env
+      #     echo "COMPANY_NAME=${{ secrets.COMPANY_NAME }}" >> .env
+      #     echo "COMPANY_ADDRESS=${{ secrets.COMPANY_ADDRESS }}" >> .env
+      #     echo "COMPANY_SLOGAN=${{ secrets.COMPANY_SLOGAN }}" >> .env
+      #     echo "ORDER_EMAIL_SUBJECT=${{ secrets.ORDER_EMAIL_SUBJECT }}" >> .env
+      #     echo "MAILER_HOST=${{ secrets.MAILER_HOST }}" >> .env
+      #     echo "MAILER_PORT=${{ secrets.MAILER_PORT }}" >> .env
+      #     echo "MAILER_SECURE=${{ secrets.MAILER_SECURE }}" >> .env
+      #     echo "MAILER_USER=${{ secrets.MAILER_USER }}" >> .env
+      #     echo "MAILER_PASSWORD=${{ secrets.MAILER_PASSWORD }}" >> .env
+      #     echo "MAILER_FROM=${{ secrets.MAILER_FROM }}" >> .env
+      #     echo "MAILER_FROM_NAME=${{ secrets.MAILER_FROM_NAME }}" >> .env
 
       - name: Build the project
         run: npm run build
@@ -66,6 +66,7 @@ jobs:
 
       - name: Create .env file from GitHub Secrets
         run: |
+          touch .env
           echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
           echo "PORT=${{ secrets.PORT }}" >> .env
           echo "JWT_TOKEN=${{ secrets.JWT_TOKEN }}" >> .env
