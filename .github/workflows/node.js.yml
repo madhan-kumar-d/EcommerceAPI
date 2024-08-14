@@ -1,16 +1,13 @@
-name: Node.js CI
+name: Build and Deploy Docker Image
 
 on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 
 jobs:
-  build:
-    runs-on: awshost-label-1
+  build-and-push:
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
@@ -19,23 +16,66 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '22'
+          node-version: '18'
 
       - name: Install dependencies
         run: npm install
 
-      - name: Create .env file
-        run: echo ${{ secrets.ENV_VAR }} > .env
-        
-      - name: Build project
+      - name: Generate Prisma client
+        run: npx prisma generate
+
+      - name: Build the project
         run: npm run build
 
-      - name: Docker build
-        run: docker build -t ecomapi:latest .
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-      - name: Docker run
+      - name: Build Docker image
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }} .
+
+      - name: Push Docker image to Docker Hub
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
+
+  deploy:
+    runs-on: self-hosted
+    needs: build-and-push
+
+    steps:
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Pull Docker image from Docker Hub
+        run: docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
+
+      - name: Create .env file from GitHub Secrets
+        run: |
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
+          echo "PORT=${{ secrets.PORT }}" >> .env
+          echo "JWT_TOKEN=${{ secrets.JWT_TOKEN }}" >> .env
+          echo "JWT_EXPIRY=${{ secrets.JWT_EXPIRY }}" >> .env
+          echo "JWT_REFRESH_EXPIRY=${{ secrets.JWT_REFRESH_EXPIRY }}" >> .env
+          echo "UUID_V5_NAMESPACE=${{ secrets.UUID_V5_NAMESPACE }}" >> .env
+          echo "COMPANY_NAME=${{ secrets.COMPANY_NAME }}" >> .env
+          echo "COMPANY_ADDRESS=${{ secrets.COMPANY_ADDRESS }}" >> .env
+          echo "COMPANY_SLOGAN=${{ secrets.COMPANY_SLOGAN }}" >> .env
+          echo "ORDER_EMAIL_SUBJECT=${{ secrets.ORDER_EMAIL_SUBJECT }}" >> .env
+          echo "MAILER_HOST=${{ secrets.MAILER_HOST }}" >> .env
+          echo "MAILER_PORT=${{ secrets.MAILER_PORT }}" >> .env
+          echo "MAILER_SECURE=${{ secrets.MAILER_SECURE }}" >> .env
+          echo "MAILER_USER=${{ secrets.MAILER_USER }}" >> .env
+          echo "MAILER_PASSWORD=${{ secrets.MAILER_PASSWORD }}" >> .env
+          echo "MAILER_FROM=${{ secrets.MAILER_FROM }}" >> .env
+          echo "MAILER_FROM_NAME=${{ secrets.MAILER_FROM_NAME }}" >> .env
+
+      - name: Stop and remove old container
+        run: |
+          docker stop my-node-app || true
+          docker rm my-node-app || true
+
+      - name: Run Docker container
         run: |
           docker run -d \
-            --name ecomapi \
-            -p 3000:3000 \
-            ecomapi:latest
+            --name my-node-app \
+            --env-file .env \
+            -p ${{ secrets.PORT }}:${{ secrets.PORT }} \
+            my-dockerhub-username/my-node-app:latest

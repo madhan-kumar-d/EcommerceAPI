@@ -10,7 +10,9 @@
     "build": "tsc",
     "lint": "npx eslint src/**/*.ts",
     "lint:fix": "npx eslint src/**/*.ts --fix",
-    "lint:format": "prettier --write \"**/*.ts\" "
+    "lint:format": "prettier --write \"**/*.ts\" ",
+    "prisma": "prisma",
+    "generate": "prisma generate"
   },
   "repository": {
     "type": "git",
