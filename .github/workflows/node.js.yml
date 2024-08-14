@@ -100,6 +100,6 @@ jobs:
         run: |
           docker run -d \
             --name ${{ secrets.DOCKER_REPO }} \
-            --restart=always
+            --restart=always \
             -p ${{ secrets.PORT }}:${{ secrets.PORT }} \
             ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:latest
