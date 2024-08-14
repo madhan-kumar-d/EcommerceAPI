@@ -84,11 +84,12 @@ jobs:
           echo "MAILER_FROM=${{ secrets.MAILER_FROM }}" >> .env
           echo "MAILER_FROM_NAME=${{ secrets.MAILER_FROM_NAME }}" >> .env
 
-      - name: Generate Prisma client
-        run: npx prisma generate
+      #       need to run inside the container not o
+      #      - name: Generate Prisma client
+      #        run: npx prisma generate
 
-      - name: Generate Prisma client
-        run: npx prisma migrate deploy
+      #      - name: Generate Prisma client
+      #        run: npx prisma migrate deploy
 
       - name: Stop and remove old container
         run: |

@@ -12,7 +12,8 @@
     "lint:fix": "npx eslint src/**/*.ts --fix",
     "lint:format": "prettier --write \"**/*.ts\" ",
     "prisma": "prisma",
-    "generate": "prisma generate"
+    "generate": "prisma generate",
+    "deploy": "prisma migrate deploy"
   },
   "repository": {
     "type": "git",

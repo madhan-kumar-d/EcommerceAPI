@@ -28,4 +28,6 @@ RUN npm ci --only=production
 
 EXPOSE 3000
 
-#CMD ["npm", "start"] 
+CMD ["npm", "run", "generate"] 
+CMD ["npm", "run", "deploy"] 
+CMD ["npm", "start"] 
