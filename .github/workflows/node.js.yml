@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -84,7 +84,7 @@ jobs:
           echo "MAILER_FROM=${{ secrets.MAILER_FROM }}" >> .env
           echo "MAILER_FROM_NAME=${{ secrets.MAILER_FROM_NAME }}" >> .env
 
-      #       need to run inside the container not o
+      #       need to run inside the container
       #      - name: Generate Prisma client
       #        run: npx prisma generate
 
