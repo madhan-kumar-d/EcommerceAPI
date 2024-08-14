@@ -20,7 +20,7 @@ FROM node:22-alpine
 WORKDIR /app
 
 # Copy only the build artifacts from the previous stage
-COPY --from=build /app ./build
+COPY --from=build /app/build ./build
 
 COPY --from=build /app/package*.json ./
 
