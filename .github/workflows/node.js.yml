@@ -102,6 +102,6 @@ jobs:
           docker run -d \
             --name ${{ secrets.DOCKER_REPO }} \
             --restart=always \
-            -env-file .env \
+            --env-file .env \
             -p ${{ secrets.PORT }}:${{ secrets.PORT }} \
             ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:latest
