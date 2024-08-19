@@ -5,11 +5,7 @@
     "description": "Simple Node js Application with Auth, Product, Cart And Checkout\n\nMore Details Check [Swagger Editor](https://editor.swagger.io/)",
     "version": "1.0.0"
   },
-  "servers": [
-    {
-      "url": "/"
-    }
-  ],
+
   "tags": [
     {
       "name": "Auth",
