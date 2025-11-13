@@ -6,4 +6,5 @@ public/uploads/users/*
 .git*
 build
 .eslintrc.json*
-log
+log/
+# prisma/dev.db
