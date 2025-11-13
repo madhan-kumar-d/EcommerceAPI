@@ -1,20 +1,14 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 model User {
-  id        Int        @id @default(autoincrement()) @db.UnsignedInt
+  id        Int        @id @default(autoincrement())
   name      String
   email     String
   password  String
@@ -22,32 +16,32 @@ model User {
   updatedAt DateTime   @updatedAt
   Tokens    Tokens[]
   userImage String?
-  role      ROLE       @default(USER)
+  role      String     
   uniqueID  String     @unique @default(uuid())
   CartItem  CartItem[]
   Order     Order[]
 }
 
 model Tokens {
-  id           Int      @unique @default(autoincrement()) @db.UnsignedInt
-  userId       Int      @db.UnsignedInt
+  id           Int      @id @default(autoincrement())
+  userId       Int
   token        String
   issuedAt     DateTime @default(now())
   expiresAt    DateTime
   isValid      Boolean  @default(true)
-  ipAddress    String?  @db.VarChar(20)
-  userAgent    String?  @db.Text
+  ipAddress    String?
+  userAgent    String?
   userRelation User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@index([userId, isValid(sort: Asc)])
+  @@index([userId, isValid])
 }
 
 model Product {
-  id           Int        @unique @default(autoincrement()) @db.UnsignedInt
+  id           Int        @id @default(autoincrement())
   name         String
-  description  String     @db.LongText
-  price        Decimal    @db.Decimal(15,3)
-  MRP          Decimal    @db.Decimal(15,3)
+  description  String
+  price        Float
+  MRP          Float
   productImage String?
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
@@ -55,29 +49,29 @@ model Product {
 }
 
 model CartItem {
-  id        Int      @unique @default(autoincrement()) @db.UnsignedInt
-  userId    Int      @db.UnsignedInt
+  id        Int      @id @default(autoincrement())
+  userId    Int
   user      User     @relation(fields: [userId], references: [id])
-  productID Int      @db.UnsignedInt
+  productID Int
   Product   Product  @relation(fields: [productID], references: [id])
   quantity  Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  orderId   Int?     @db.UnsignedInt
+  orderId   Int?
   order     Order?   @relation(fields: [orderId], references: [id])
 
   @@map("cart_items")
 }
 
 model Order {
-  id            Int           @unique @default(autoincrement()) @db.UnsignedInt
-  userId        Int           @db.UnsignedInt
+  id            Int           @id @default(autoincrement())
+  userId        Int
   user          User          @relation(fields: [userId], references: [id])
-  netAmount     Decimal       @db.Decimal(15,3)
+  netAmount     Float
   totalQuantity Int
-  address       String        @db.Text
-  pinCode       String        @db.VarChar(6)
-  orderStatus   ORDERSTATUS   @default(PENDING)
+  address       String
+  pinCode       String
+  orderStatus   String
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
   OrderStatus   OrderStatus[]
@@ -85,27 +79,11 @@ model Order {
 }
 
 model OrderStatus {
-  id          Int         @unique @default(autoincrement()) @db.UnsignedInt
-  orderID     Int         @db.UnsignedInt
+  id          Int         @id @default(autoincrement())
+  orderID     Int
   order       Order       @relation(fields: [orderID], references: [id])
-  orderStatus ORDERSTATUS
+  orderStatus String
   createdAt   DateTime    @default(now())
 
   @@map("order_status")
-}
-
-enum ROLE {
-  ADMIN
-  USER
-}
-
-enum ORDERSTATUS {
-  PENDING
-  PAYMENT_PENDING
-  PAYMENT_COMPLETED
-  ACCEPTED
-  ORDER_IN_PROGRESS
-  OUT_FOR_DELIVERY
-  DELIVERED
-  CANCELED
 }

@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 
-dotenv.config({ path: '.env' });
+dotenv.config({ path: '.env.git' });
 const secrets = {
   PORT: process.env.PORT || 3000,
   JWT_TOKEN: process.env.JWT_TOKEN!,
