@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { prismaClient } from '..';
 import { noRecordFound } from '../exceptions/noRecordsFound';
 import { errorCodes } from '../exceptions/root';
-import { ORDERSTATUS } from '@prisma/client';
+// import { ORDERSTATUS } from '@prisma/client';
 import orderEmail from './template/orderEmail';
 import sendMail from '../middleware/mailer';
 import secrets from '../secrets';
@@ -120,6 +120,7 @@ export const createCheckout = async (req: Request, res: Response) => {
       address,
       totalQuantity: orderDetails.totalQuantity,
       netAmount: orderDetails.netAmount,
+      orderStatus: "PENDING"
     },
   });
   if (order) {
@@ -159,7 +160,7 @@ export const createCheckout = async (req: Request, res: Response) => {
 
 export const updateCheckoutStatus = async (req: Request, res: Response) => {
   const orderId = +req.params.id;
-  const { status }: { status: ORDERSTATUS } = req.body;
+  const { status }: { status: string } = req.body;
   const order = await prismaClient.order.findFirst({
     where: {
       id: orderId,
@@ -195,7 +196,7 @@ export const updateCheckoutStatus = async (req: Request, res: Response) => {
   });
   interface mailDetails {
     userName: string;
-    status: ORDERSTATUS;
+    status: string;
     fullLink: string;
   }
   const Details: mailDetails = {

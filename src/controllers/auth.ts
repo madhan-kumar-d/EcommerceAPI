@@ -22,6 +22,7 @@ export const signup = async (req: Request, res: Response) => {
       name,
       email,
       password: await hash(password, salt),
+      role: "USER"
     },
   });
   const accessToken = generateAccessToken(user.uniqueID);
