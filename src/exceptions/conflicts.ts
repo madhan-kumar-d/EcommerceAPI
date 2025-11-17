@@ -1,4 +1,4 @@
-import { errorCodes, HTTPException } from './root';
+import { errorCodes, HTTPException } from './root.js';
 
 export class conflictException extends HTTPException {
   constructor(message: string, errorCodes: errorCodes, error: any) {

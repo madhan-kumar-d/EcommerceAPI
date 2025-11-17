@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
-import { prismaClient } from '..';
-import { noRecordFound } from '../exceptions/noRecordsFound';
-import { errorCodes } from '../exceptions/root';
+import { prismaClient } from '../index.js';
+import { noRecordFound } from '../exceptions/noRecordsFound.js';
+import { errorCodes } from '../exceptions/root.js';
 // import { ORDERSTATUS } from '@prisma/client';
-import orderEmail from './template/orderEmail';
-import sendMail from '../middleware/mailer';
-import secrets from '../secrets';
-import orderUpdateEmail from './template/orderUpdateEmail';
+import orderEmail from './template/orderEmail.js';
+import sendMail from '../middleware/mailer.js';
+import secrets from '../secrets.js';
+import orderUpdateEmail from './template/orderUpdateEmail.js';
 
 // Admin 8
 export const getCheckout = async (req: Request, res: Response) => {
@@ -120,7 +120,7 @@ export const createCheckout = async (req: Request, res: Response) => {
       address,
       totalQuantity: orderDetails.totalQuantity,
       netAmount: orderDetails.netAmount,
-      orderStatus: "PENDING"
+      orderStatus: 'PENDING',
     },
   });
   if (order) {

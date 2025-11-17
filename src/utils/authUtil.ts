@@ -1,8 +1,8 @@
 import { Request } from 'express';
-import jwt from 'jsonwebtoken';
+import jwt, { SignOptions } from 'jsonwebtoken';
 import crypto from 'node:crypto';
-import { prismaClient } from '..';
-import secrets from '../secrets';
+import { prismaClient } from '../index.js';
+import secrets from '../secrets.js';
 import { v5 as uuid } from 'uuid';
 
 export const hashToken = (token: string) => {
@@ -37,5 +37,5 @@ export const generateAccessToken = (userId: string) => {
   return jwt.sign({ userId }, secrets.JWT_TOKEN, {
     algorithm: 'HS512',
     expiresIn: secrets.JWT_EXPIRY,
-  });
+  } as SignOptions);
 };

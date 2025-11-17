@@ -1,4 +1,4 @@
-import secrets from '../../secrets';
+import secrets from '../../secrets.js';
 
 const orderEmail = (content: any) => {
   const productList = content.products;

@@ -1,18 +1,18 @@
 import { Router } from 'express';
-import { getValidator, validator } from '../middleware/validator';
+import { getValidator, validator } from '../middleware/validator.js';
 import {
   cartCreateSchema,
   cartQuerySchema,
   cartUpdateSchema,
-} from '../validator.Schema/cart';
-import { validateToken } from '../middleware/auth';
-import { errorHandler } from '../errorHandler';
+} from '../validator.Schema/cart.js';
+import { validateToken } from '../middleware/auth.js';
+import { errorHandler } from '../errorHandler.js';
 import {
   createCart,
   deleteCart,
   getCart,
   updateCart,
-} from '../controllers/cart';
+} from '../controllers/cart.js';
 
 const cartRouter = Router();
 

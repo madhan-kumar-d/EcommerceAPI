@@ -1,8 +1,8 @@
 import fs from 'node:fs';
 import { Request, Response } from 'express';
-import { prismaClient } from '..';
-import { noRecordFound } from '../exceptions/noRecordsFound';
-import { errorCodes } from '../exceptions/root';
+import { prismaClient } from '../index.js';
+import { noRecordFound } from '../exceptions/noRecordsFound.js';
+import { errorCodes } from '../exceptions/root.js';
 
 export const getProducts = async (req: Request, res: Response) => {
   const { productID } = req.params;

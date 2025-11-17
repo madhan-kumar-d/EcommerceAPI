@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Request, Response, Router } from 'express';
-import { isAdmin, validateToken } from '../middleware/auth';
-import { errorHandler } from '../errorHandler';
+import { isAdmin, validateToken } from '../middleware/auth.js';
+import { errorHandler } from '../errorHandler.js';
 import multer from 'multer';
 import {
   createProduct,
@@ -9,13 +9,13 @@ import {
   getProducts,
   searchProducts,
   updateProduct,
-} from '../controllers/product';
-import { getValidator, validator } from '../middleware/validator';
+} from '../controllers/product.js';
+import { getValidator, validator } from '../middleware/validator.js';
 import {
   createProductSchema,
   queryProductSchema,
   searchSchema,
-} from '../validator.Schema/products';
+} from '../validator.Schema/products.js';
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {

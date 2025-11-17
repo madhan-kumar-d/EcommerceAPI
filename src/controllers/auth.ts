@@ -1,10 +1,14 @@
 import { Response, Request } from 'express';
 import { compare, hash, genSalt } from 'bcrypt';
-import { prismaClient } from '../index';
-import { BadRequestsException } from '../exceptions/bad-request';
-import { errorCodes } from '../exceptions/root';
-import { conflictException } from '../exceptions/conflicts';
-import { generateAccessToken, generateRefreshToken, hashToken } from '../utils';
+import { prismaClient } from '../index.js';
+import { BadRequestsException } from '../exceptions/bad-request.js';
+import { errorCodes } from '../exceptions/root.js';
+import { conflictException } from '../exceptions/conflicts.js';
+import {
+  generateAccessToken,
+  generateRefreshToken,
+  hashToken,
+} from '../utils/index.js';
 
 export const signup = async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
@@ -22,7 +26,7 @@ export const signup = async (req: Request, res: Response) => {
       name,
       email,
       password: await hash(password, salt),
-      role: "USER"
+      role: 'USER',
     },
   });
   const accessToken = generateAccessToken(user.uniqueID);

@@ -1,8 +1,12 @@
 import { Response, Request, NextFunction } from 'express';
-import { errorCodes, HTTPException } from '../exceptions/root';
-import { JsonWebTokenError } from 'jsonwebtoken';
-import { log } from '../utils/logger';
+import { errorCodes, HTTPException } from '../exceptions/root.js';
+import jwt from 'jsonwebtoken';
+import { log } from '../utils/logger.js';
 import { Prisma } from '@prisma/client';
+
+// In modern ESM environments (Node.js with "type": "module"), you cannot directly import named exports from a CommonJS module unless they are explicitly defined.
+// The `jsonwebtoken` library is written in CommonJS, so named imports like `import { JsonWebTokenError } from 'jsonwebtoken';` will fail.
+const { JsonWebTokenError } = jwt;
 
 export const errorMiddleware = (
   error: HTTPException | any,

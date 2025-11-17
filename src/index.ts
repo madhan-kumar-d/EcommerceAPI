@@ -2,13 +2,13 @@ import express, { Express, Request, Response, NextFunction } from 'express';
 import { PrismaClient } from '@prisma/client';
 import helmet from 'helmet';
 import cors from 'cors';
-import secrets from './secrets';
-import mainRouter from './routes';
+import secrets from './secrets.js';
+import mainRouter from './routes/index.js';
 import * as cron from 'node-cron';
-import { errorMiddleware } from './middleware/errors';
-import { error404 } from './middleware/error404';
-import { errorHandler } from './errorHandler';
-import { limiter } from './middleware/rateLimit';
+import { errorMiddleware } from './middleware/errors.js';
+import { error404 } from './middleware/error404.js';
+import { errorHandler } from './errorHandler.js';
+import { limiter } from './middleware/rateLimit.js';
 import compression from 'compression';
 
 declare module 'express-serve-static-core' {
@@ -51,20 +51,25 @@ export const prismaClient = new PrismaClient({
 app.use(errorHandler(error404));
 app.use(errorMiddleware);
 
-cron.schedule('* * * * *', async () => {
-  try {
-    const date = new Date().toISOString();
-    await prismaClient.tokens.deleteMany({
-      where: {
-        expiresAt: {
-          lt: date,
+if (process.env.NODE_ENV !== 'test') {
+  cron.schedule('* * * * *', async () => {
+    try {
+      const date = new Date().toISOString();
+      await prismaClient.tokens.deleteMany({
+        where: {
+          expiresAt: {
+            lt: date,
+          },
         },
-      },
-    });
-  } catch (error: any) {
-    console.log(error);
-  }
-});
-app.listen(PORT, () => {
-  console.log(`app started at ${PORT}`);
-});
+      });
+    } catch (error: any) {
+      console.log(error);
+    }
+  });
+
+  app.listen(PORT, () => {
+    console.log(`app started at ${PORT}`);
+  });
+}
+
+export { app };

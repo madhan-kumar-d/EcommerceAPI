@@ -1,4 +1,4 @@
-import secrets from '../../secrets';
+import secrets from '../../secrets.js';
 
 const orderUpdateEmail = (content: any) => {
   return `<!DOCTYPE html>

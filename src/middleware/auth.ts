@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
-import secrets from '../secrets';
-import { unauthenticatedException } from '../exceptions/unauthenticated';
-import { errorCodes } from '../exceptions/root';
-import { prismaClient } from '..';
+import secrets from '../secrets.js';
+import { unauthenticatedException } from '../exceptions/unauthenticated.js';
+import { errorCodes } from '../exceptions/root.js';
+import { prismaClient } from '../index.js';
 
 export const validateToken = async (
   req: Request,
