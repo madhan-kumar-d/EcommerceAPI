@@ -2,13 +2,13 @@ import express, { Express, Request, Response, NextFunction } from 'express';
 import { PrismaClient } from '@prisma/client';
 import helmet from 'helmet';
 import cors from 'cors';
-import secrets from './secrets.js';
-import mainRouter from './routes/index.js';
+import secrets from './secrets';
+import mainRouter from './routes/index';
 import * as cron from 'node-cron';
-import { errorMiddleware } from './middleware/errors.js';
-import { error404 } from './middleware/error404.js';
-import { errorHandler } from './errorHandler.js';
-import { limiter } from './middleware/rateLimit.js';
+import { errorMiddleware } from './middleware/errors';
+import { error404 } from './middleware/error404';
+import { errorHandler } from './errorHandler';
+import { limiter } from './middleware/rateLimit';
 import compression from 'compression';
 
 declare module 'express-serve-static-core' {
@@ -19,7 +19,7 @@ declare module 'express-serve-static-core' {
     fullLink: string;
   }
 }
-const app: Express = express();
+export const app: Express = express();
 const PORT = secrets.PORT;
 const corsOptions = {
   credentials: true,
@@ -71,5 +71,3 @@ if (process.env.NODE_ENV !== 'test') {
     console.log(`app started at ${PORT}`);
   });
 }
-
-export { app };

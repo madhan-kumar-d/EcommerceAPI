@@ -1,13 +1,13 @@
 import { Router } from 'express';
-import { aboutMe, login, logout, signup, token } from '../controllers/auth.js';
-import { errorHandler } from '../errorHandler.js';
-import { validator } from '../middleware/validator.js';
+import { aboutMe, login, logout, signup, token } from '../controllers/auth';
+import { errorHandler } from '../errorHandler';
+import { validator } from '../middleware/validator';
 import {
   loginSchema,
   registerSchema,
   tokenSchema,
-} from '../validator.Schema/index.js';
-import { validateToken } from '../middleware/auth.js';
+} from '../validator.Schema/index';
+import { validateToken } from '../middleware/auth';
 
 const authRouter: Router = Router();
 

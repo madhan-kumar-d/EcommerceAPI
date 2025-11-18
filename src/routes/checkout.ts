@@ -3,15 +3,15 @@ import {
   createCheckout,
   getCheckout,
   updateCheckoutStatus,
-} from '../controllers/checkout.js';
-import { errorHandler } from '../errorHandler.js';
-import { isAdmin, validateToken } from '../middleware/auth.js';
-import { getValidator, validator } from '../middleware/validator.js';
+} from '../controllers/checkout';
+import { errorHandler } from '../errorHandler';
+import { isAdmin, validateToken } from '../middleware/auth';
+import { getValidator, validator } from '../middleware/validator';
 import {
   createCheckoutSchema,
   updateCheckoutStatusSchema,
   updateCheckoutStatusQuerySchema,
-} from '../validator.Schema/checkout.js';
+} from '../validator.Schema/checkout';
 
 const checkoutRouter = Router();
 

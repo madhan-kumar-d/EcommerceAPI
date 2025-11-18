@@ -1,7 +1,7 @@
 import { Response, Request, NextFunction } from 'express';
-import { errorCodes, HTTPException } from '../exceptions/root.js';
+import { errorCodes, HTTPException } from '../exceptions/root';
 import jwt from 'jsonwebtoken';
-import { log } from '../utils/logger.js';
+import { log } from '../utils/logger';
 import { Prisma } from '@prisma/client';
 
 // In modern ESM environments (Node.js with "type": "module"), you cannot directly import named exports from a CommonJS module unless they are explicitly defined.

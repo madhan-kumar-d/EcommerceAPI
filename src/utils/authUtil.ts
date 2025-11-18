@@ -1,8 +1,8 @@
 import { Request } from 'express';
 import jwt, { SignOptions } from 'jsonwebtoken';
 import crypto from 'node:crypto';
-import { prismaClient } from '../index.js';
-import secrets from '../secrets.js';
+import { prismaClient } from '../index';
+import secrets from '../secrets';
 import { v5 as uuid } from 'uuid';
 
 export const hashToken = (token: string) => {

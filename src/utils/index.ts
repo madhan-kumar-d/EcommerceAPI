@@ -1,1 +1,1 @@
-export * from './authUtil.js';
+export * from './authUtil';

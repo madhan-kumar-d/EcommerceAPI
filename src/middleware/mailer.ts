@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-import secrets from '../secrets.js';
+import secrets from '../secrets';
 
 const mailerSecure = secrets.MAILER_SECURE.toLowerCase();
 const mailer = nodemailer.createTransport({

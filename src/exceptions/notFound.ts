@@ -1,4 +1,4 @@
-import { HTTPException, errorCodes } from './root.js';
+import { HTTPException, errorCodes } from './root';
 
 export class pageNotFound extends HTTPException {
   constructor(message: string) {

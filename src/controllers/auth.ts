@@ -1,14 +1,14 @@
 import { Response, Request } from 'express';
 import { compare, hash, genSalt } from 'bcrypt';
-import { prismaClient } from '../index.js';
-import { BadRequestsException } from '../exceptions/bad-request.js';
-import { errorCodes } from '../exceptions/root.js';
-import { conflictException } from '../exceptions/conflicts.js';
+import { prismaClient } from '../index';
+import { BadRequestsException } from '../exceptions/bad-request';
+import { errorCodes } from '../exceptions/root';
+import { conflictException } from '../exceptions/conflicts';
 import {
   generateAccessToken,
   generateRefreshToken,
   hashToken,
-} from '../utils/index.js';
+} from '../utils/index';
 
 export const signup = async (req: Request, res: Response) => {
   const { name, email, password } = req.body;

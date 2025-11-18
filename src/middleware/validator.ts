@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import Joi from 'joi';
-import { InvalidInputsException } from '../exceptions/invalid-inputs.js';
-import { errorCodes } from '../exceptions/root.js';
+import { InvalidInputsException } from '../exceptions/invalid-inputs';
+import { errorCodes } from '../exceptions/root';
 
 export const validator = (schema: Joi.ObjectSchema) => {
   return (req: Request, res: Response, next: NextFunction) => {

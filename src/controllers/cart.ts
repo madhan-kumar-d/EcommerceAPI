@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import { prismaClient } from '../index.js';
-import { noRecordFound } from '../exceptions/noRecordsFound.js';
-import { errorCodes } from '../exceptions/root.js';
+import { prismaClient } from '../index';
+import { noRecordFound } from '../exceptions/noRecordsFound';
+import { errorCodes } from '../exceptions/root';
 
 const getCartContent = async (req: Request, userId: number) => {
   const cartArr = await prismaClient.cartItem.findMany({

@@ -1,4 +1,4 @@
-import { HTTPException, errorCodes } from './root.js';
+import { HTTPException, errorCodes } from './root';
 
 export class noRecordFound extends HTTPException {
   constructor(message: string, errorCodes: errorCodes, error: any) {

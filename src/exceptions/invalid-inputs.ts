@@ -1,4 +1,4 @@
-import { errorCodes, HTTPException } from './root.js';
+import { errorCodes, HTTPException } from './root';
 
 export class InvalidInputsException extends HTTPException {
   constructor(message: string, errorCodes: errorCodes, errors: any) {
